@@ -25,10 +25,10 @@
      * Current declarative format can contain following elements:
      * 
      *   data - backbone model or collection,
-     *   template: template used for rendering
+     *   template - template used for rendering
      *   actions - array of pairs: event:handler. All Backbone events are supported. Additionary
      *             custom events can be defined. All handlers should be added to Backbone.Binding.Handlers 
-     *   options: hash of additional options which could be used by handlers 
+     *   options - hash of additional options which could be used by handlers 
      *  
      * Examples of declarative binding:
      * 
