@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Backbone.Bindings</title>
+  </head>
+  <body>
+    <input data-bind="data:car, init:color:set, change:color:set, click:test" type="text" name="add" value="" />
+ 
+    <!-- render elements from given collection -->    
+    <div id="list" data-bind="data:cars, init:render, all:render, template:car-tmpl"></div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+    <script id="car-tmpl" type="text/html">
+      <div><%= model.color %> <%= model.type %></div>
+    </script>
+    
+    <script src="vendor/underscore.js"></script>
+    <script src="vendor/backbone.js"></script>
+    <script>
+      var Car = Backbone.Model.extend({});
+
+      var Cars = Backbone.Collection.extend({
+        model: Car
+      });
+
+      function test() {
+        console.log('test');
+      }
+      var car = new Car();
+      car.set({color: "red"});
+      var cars = new Cars();
+      cars.add(car);
+            
+      $(function () {
+        Backbone.Binding.bindAll();
+      });
+    </script>
+    <script src="backbone.bindings.js"></script>
+  </body>
+</html>
