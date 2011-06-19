@@ -166,6 +166,8 @@
           el.bind(action.event, action.handler);
         }
       });
+
+      return binding;
     }
   };
 
