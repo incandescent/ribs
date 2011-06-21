@@ -13,7 +13,9 @@
       DOM_EVENTS = ['click'];
 
   // object which represents binding
-  Backbone.Binding = function () {
+  Backbone.Binding = function (ctx) {
+    // current context
+    this.ctx = ctx || window;
   };
 
   // extend Binding with methods
@@ -108,7 +110,7 @@
      * @return object
      */
     _getObjectByName: function (objStr) {
-      var obj = window;
+      var obj = this.ctx;
       _(objStr.split('.')).each(function (prop) {
         if (obj.hasOwnProperty(prop)) {
           obj = obj[prop];
