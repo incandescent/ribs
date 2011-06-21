@@ -43,4 +43,11 @@ $(function() {
       var binding = this.b._parse("wrong syntaxt");
      }, "fails because syntax is wrong" );
   });
+
+  test("missing data and backbone event raises exception", function () {
+    raises(function () {
+      var binding = this.b._parse("init:a");
+     }, "fails because data is not present for init event" );
+  });
+
 });
