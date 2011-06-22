@@ -5,9 +5,9 @@
   </head>
   <body>
     <p>bind to model, update on keyup</p>
-    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update" type="text" name="text1" value="" /><br />
+    <input data-bind="data:car, keyup:set:color, init:color:update, change:color:update" type="text" name="text1" value="" /><br />
     <p>bind to model, update on mouseout</p>
-    <input data-bind="mouseout:set:color, data:car, init:color:update, change:color:update" type="text" name="text2" value="" />
+    <input data-bind="data:car, mouseout:set:color, init:color:update, change:color:update" type="text" name="text2" value="" />
     <!-- render elements from given collection -->    
     <div id="list" data-bind="data:cars, init:render, all:render, template:car-tmpl"></div>
     
