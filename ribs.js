@@ -10,7 +10,7 @@
   
   // valid backbone events
   var BACKBONE_EVENTS = ['add', 'change', 'remove', 'all', 'route', 'error'],
-      DOM_EVENTS = ['click', 'mouseover', 'mouseout'];
+      DOM_EVENTS = ['click', 'mouseover', 'mouseout', 'keyup'];
 
   // object which represents binding
   if (typeof Ribs == "undefined") {
@@ -26,33 +26,46 @@
      * @param el {$}
      * @param dec {Ribs.Declaration} 
      */
-    bind: function (el, dec) {
-       _(dec.bindings).each(function (binding) {
+    bind: function (el, dec) {  
+      _(dec.bindings).each(function (binding) {
         // process backbone bindings only if data present
         if (dec.data) {
           if (BACKBONE_EVENTS.indexOf(binding.event) > -1) {  
-            dec.data.bind(binding.event, binding.handler);
+            var e = (binding.attr) ? binding.event + ":" + binding.attr : binding.event;
+            dec.data.bind(e, function () {
+              Ribs.Bindings.execute(el, binding, dec);
+            });
           }
-
           // handle init events
           if (binding.event.match(/init/)) {
-            // data attribute present
-            if (binding.attr) {
-              binding.handler.call(el, binding.attr, dec.data.get(binding.attr), dec);
-            }
-            else {
-              binding.handler.call(el, dec, binding);
-            }
+            Ribs.Bindings.execute(el, binding, dec);
           }
         }
 
         // handle dom events
         if (DOM_EVENTS.indexOf(binding.event) > -1) {
-          el.bind(binding.event, binding.handler);
+          el.bind(binding.event, function (e) {
+            binding.handler.call(el, e, binding, dec);    
+          });
         }
       });
 
       return dec;
+    },
+    
+    /**
+    *  Executes backbone binding.
+    *  @param el {$} DOM element
+    *  @param binding {Object}
+    *  @param dec {Ribs.Declaration}
+    */
+    execute: function (el, binding, dec) {
+      if (binding.attr) {
+        binding.handler.call(el, binding.attr, dec.data.get(binding.attr), dec);
+      }
+      else {
+        binding.handler.call(el, dec, binding);
+      }
     }
   };
   
@@ -120,10 +133,10 @@
     /**
      * Parses single token and updates binding object.
      * @param token {Array}
-     * @param declaration {Ribs.Declaration} 
+     * @param dec {Ribs.Declaration} 
      * @param ctx {Object} current context/namespace
      */
-    _parseToken: function (token, declaration, ctx) {
+    _parseToken: function (token, dec, ctx) {
       if (!_.isArray(token) || token.length < 2) {
         throw new Error("Token " + token + " has a wrong format.");
       }
@@ -136,22 +149,27 @@
           
       switch (key) {
       case "data":
-        declaration.data = this._getObjectByName(value, ctx);
+        dec.data = this._getObjectByName(value, ctx);
         break;
       case "template":
-        declaration.template = value;
+        dec.template = value;
         break;
       case "option":
-        declaration.options[value] = extra;
+        dec.options[value] = extra;
         break;
-      default:
-        if (extra) {
-          key = token.slice(0, 2).join(":");
-          attr = value;
-          value = extra;
+      default: // binding 
+       if (extra) {
+          // backbone event
+          if (BACKBONE_EVENTS.indexOf(key) > -1 || key.match(/init/)) {  
+            attr = value;
+            value = extra;
+          }
+          else {
+            attr = extra;
+          }
         }
         binding = {event: key, attr: attr, handler: this._findHandler(value)};
-        declaration.bindings.push(binding);
+        dec.bindings.push(binding);
       }
     },
 
@@ -193,14 +211,21 @@
   // all handlers execute in the context of the current element
   // extend it if you want to add more handlers 
   Ribs.Handlers = {
-    set: function (attr, value, binding) {
+    set: function (e, binding, dec) {
+      if (binding.attr) {
+        var val = {};
+        val[binding.attr] = $(this).val();
+        dec.data.set(val);
+      }
+    },
+
+    update: function (attr, value, binding) {
       this.val(value);
     },
     
     render: function (dec, action) {
       var that = this,
           html;
-          
       // cache template
       if (typeof dec.template == "string") {
         html = $("#" + dec.template).html();
@@ -210,12 +235,12 @@
       if (dec.data.models) {
         dec.data.each(function (model) {
           html = dec.template({model: model.attributes});
-          that.append(html);
+          that.html(html);
         });
       }
       else {
         html = binding.template({model: binding.data.attributes});
-        that.append(html);
+        that.html(html);
       }
     }
   };

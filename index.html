@@ -4,8 +4,9 @@
     <title>Ribs</title>
   </head>
   <body>
-    <input data-bind="data:car, init:color:set, change:color:set, click:test" type="text" name="add" value="" />
- 
+    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update, click:test" type="text" name="add" value="" />
+    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update" type="text" name="add" value="" />
+
     <!-- render elements from given collection -->    
     <div id="list" data-bind="data:cars, init:render, all:render, template:car-tmpl"></div>
     
