@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Backbone.Bindings</title>
+    <title>Ribs</title>
   </head>
   <body>
     <input data-bind="data:car, init:color:set, change:color:set, click:test" type="text" name="add" value="" />
@@ -32,9 +32,9 @@
       cars.add(car);
             
       $(function () {
-        Backbone.Binding.bindAll();
+        Ribs.bindAll();
       });
     </script>
-    <script src="backbone.bindings.js"></script>
+    <script src="ribs.js"></script>
   </body>
 </html>

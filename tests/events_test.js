@@ -14,7 +14,7 @@ $(function() {
       this.cars.add(this.car);
       
       this.nm = {cars: this.cars, car: this.car, a: function (){}, b:function(){}}; // namespace
-      this.b = new Backbone.Binding(this.nm);
+      this.b = new Ribs(this.nm);
     },
     teardown: function () {
       this.nm = null;

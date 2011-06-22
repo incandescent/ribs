@@ -1,4 +1,4 @@
-// Backbone.Bindings
+// Ribs
 (function () {
 
   // extend String with trim
@@ -10,16 +10,16 @@
   
   // valid backbone events
   var BACKBONE_EVENTS = ['add', 'change', 'remove', 'all', 'route', 'error'],
-      DOM_EVENTS = ['click'];
+      DOM_EVENTS = ['click', 'mouseover', 'mouseout'];
 
   // object which represents binding
-  Backbone.Binding = function (ctx) {
+  Ribs = function (ctx) {
     // current context
     this.ctx = ctx || window;
   };
 
   // extend Binding with methods
-  Backbone.Binding.prototype = {
+  Ribs.prototype = {
 
     /**
      * Converts a declarative binding string into a binding object.
@@ -28,8 +28,8 @@
      * 
      *   data - backbone model or collection,
      *   template - template used for rendering
-     *   actions - array of pairs: event:handler. All Backbone events are supported. Additionary
-     *             custom events can be defined. All handlers should be added to Backbone.Binding.Handlers 
+     *   actions - array of pairs: event:handler. All Ribs events are supported. Additionary
+     *             custom events can be defined. All handlers should be added to Ribs.Handlers 
      *   options - hash of additional options which could be used by handlers 
      *  
      * Examples of declarative binding:
@@ -123,13 +123,13 @@
     },
 
     /**
-    * Searches for handler in Backbone.Binding.Handlers for given string.
+    * Searches for handler in Ribs.Handlers for given string.
     * @param handler {String} handler's name
     *
     */
     _findHandler: function (handler) {
-      if (Backbone.Binding.Handlers[handler]) {
-        return Backbone.Binding.Handlers[handler];
+      if (Ribs.Handlers[handler]) {
+        return Ribs.Handlers[handler];
       }
       else {
         return this._getObjectByName(handler);
@@ -176,7 +176,7 @@
   // build-in handlers
   // all handlers execute in the context of the current element
   // extend it if you want to add more handlers 
-  Backbone.Binding.Handlers = {
+  Ribs.Handlers = {
     set: function (attr, value, binding) {
       this.val(value);
     },
@@ -206,11 +206,11 @@
   };
 
   // entry point
-  Backbone.Binding.bindAll = function () {
+  Ribs.bindAll = function () {
     $('[data-bind]').each(function () {
       var el = $(this),
-          binding = new Backbone.Binding();
-      binding.bind(el, el.attr('data-bind'));
+          ribs = new Ribs();
+      ribs.bind(el, el.attr('data-bind'));
     });
   };
 }());
