@@ -2,7 +2,7 @@
 (function () {
 
   // extend String with trim
-  if (typeof String.trim === "undefined") { 
+  if (typeof String.trim == "undefined") { 
     String.prototype.trim = function () {
       return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     };
@@ -13,26 +13,74 @@
       DOM_EVENTS = ['click', 'mouseover', 'mouseout'];
 
   // object which represents binding
-  Ribs = function (ctx) {
-    // current context
-    this.ctx = ctx || window;
-  };
+  if (typeof Ribs == "undefined") {
+    var Ribs = this.Ribs = {};
+  }
 
-  // extend Binding with methods
-  Ribs.prototype = {
+  // Ribs bindings
+  Ribs.Bindings = { 
 
     /**
-     * Converts a declarative binding string into a binding object.
+     * Binds actions to element.
+     * 
+     * @param el {$}
+     * @param dec {Ribs.Declaration} 
+     */
+    bind: function (el, dec) {
+       _(dec.bindings).each(function (binding) {
+        // process backbone bindings only if data present
+        if (dec.data) {
+          if (BACKBONE_EVENTS.indexOf(binding.event) > -1) {  
+            dec.data.bind(binding.event, binding.handler);
+          }
+
+          // handle init events
+          if (binding.event.match(/init/)) {
+            // data attribute present
+            if (binding.attr) {
+              binding.handler.call(el, binding.attr, dec.data.get(binding.attr), dec);
+            }
+            else {
+              binding.handler.call(el, dec, binding);
+            }
+          }
+        }
+
+        // handle dom events
+        if (DOM_EVENTS.indexOf(binding.event) > -1) {
+          el.bind(binding.event, binding.handler);
+        }
+      });
+
+      return dec;
+    }
+  };
+  
+  // Declaration represents single declarative expression defined 
+  // on DOM element turned into object
+  // TODO: I'm not very happy with this name
+  // basically this is a collection of bindings 
+  // together with addtional options
+  Ribs.Declaration = function () {
+    this.bindings = [];
+    this.options = {};
+  };
+
+  // Ribs parser and linker
+  Ribs.Parser = {
+ 
+    /**
+     * Converts declarative binding expressions into declaration object
      * 
      * Current declarative format can contain following elements:
      * 
      *   data - backbone model or collection,
      *   template - template used for rendering
-     *   actions - array of pairs: event:handler. All Ribs events are supported. Additionary
+     *   bindings - array of pairs: event:handler. All Ribs events are supported. Additionary
      *             custom events can be defined. All handlers should be added to Ribs.Handlers 
      *   options - hash of additional options which could be used by handlers 
      *  
-     * Examples of declarative binding:
+     * Examples of declarative attributes which become bindings:
      * 
      *    data:car, init:color:set, change:color:set 
      * 
@@ -50,28 +98,32 @@
      *    2. render all collection items on initialization 
      *    3. re-render collection on collection change
      *
-     * @param tokens {String} - represents declarative binding
-     * @return binding {Object} - binding object
+     * @param tokens {String} - represents binding expression
+     * @param ctx {Object} - current context/namespace
+     * @return binding {Ribs.Declaration} - declaration object
      */
-    _parse: function (tokens) {
-      var params = tokens.split(','),
-          binding = {actions: [], options:{}, templates: {}},
+    _parse: function (expression, ctx) {
+      var tokens = expression.split(','),
+          declaration = new Ribs.Declaration(),
           token, i, l;
-          
-      for (i = 0, l = params.length; i < l; i++) {
-        token = params[i].trim().split(':');
-        this._parseToken(token, binding);
+      
+      this.ctx = ctx || window; 
+
+      for (i = 0, l = tokens.length; i < l; i++) {
+        token = tokens[i].trim().split(':');
+        this._parseToken(token, declaration);
       }
 
-      return binding;
+      return declaration;
     },
 
     /**
      * Parses single token and updates binding object.
      * @param token {Array}
-     * @param binding {Object} 
+     * @param declaration {Ribs.Declaration} 
+     * @param ctx {Object} current context/namespace
      */
-    _parseToken: function (token, binding) {
+    _parseToken: function (token, declaration, ctx) {
       if (!_.isArray(token) || token.length < 2) {
         throw new Error("Token " + token + " has a wrong format.");
       }
@@ -80,17 +132,17 @@
           value = token[1],
           extra = token[2],
           attr,
-          action;
+          binding;
           
       switch (key) {
       case "data":
-        binding.data = this._getObjectByName(value);
+        declaration.data = this._getObjectByName(value, ctx);
         break;
       case "template":
-        binding.template = value;
+        declaration.template = value;
         break;
       case "option":
-        binding.options[value] = extra;
+        declaration.options[value] = extra;
         break;
       default:
         if (extra) {
@@ -98,8 +150,8 @@
           attr = value;
           value = extra;
         }
-        action = {event: key, attr: attr, handler: this._findHandler(value)};
-        binding.actions.push(action);
+        binding = {event: key, attr: attr, handler: this._findHandler(value)};
+        declaration.bindings.push(binding);
       }
     },
 
@@ -134,44 +186,9 @@
       else {
         return this._getObjectByName(handler);
       }
-    },
-
-    /**
-     * Binds actions to element.
-     * 
-     * @param el {$}
-     * @param tokens {String} declarative binding
-     */
-    bind: function (el, tokens) {
-      var binding = this._parse(tokens);
-      _(binding.actions).each(function (action) {
-        // process backbone bindings only if data present
-        if (binding.data) {
-          if (BACKBONE_EVENTS.indexOf(action.event) > -1) {  
-            binding.data.bind(action.event, action.handler);
-          }
-
-          // handle init events
-          if (action.event.match(/init/)) {
-            // data attribute present
-            if (action.attr) {
-              action.handler.call(el, action.attr, binding.data.get(action.attr), binding);
-            }
-            else {
-              action.handler.call(el, binding, action);
-            }
-          }
-        }
-
-        // handle dom events
-        if (DOM_EVENTS.indexOf(action.event) > -1) {
-          el.bind(action.event, action.handler);
-        }
-      });
-
-      return binding;
-    }
-  };
+    },   
+  
+  }
 
   // build-in handlers
   // all handlers execute in the context of the current element
@@ -181,25 +198,24 @@
       this.val(value);
     },
     
-    render: function (binding, action) {
+    render: function (dec, action) {
       var that = this,
-          tmpl = binding.template,
           html;
           
       // cache template
-      if (!binding.templates[tmpl]) {
-        html = $("#" + tmpl).html();
-        binding.templates[tmpl] = _.template(html);
+      if (typeof dec.template == "string") {
+        html = $("#" + dec.template).html();
+        dec.template = _.template(html);
       }
 
-      if (binding.data.models) {
-        binding.data.each(function (model) {
-          html = binding.templates[tmpl]({model: model.attributes});
+      if (dec.data.models) {
+        dec.data.each(function (model) {
+          html = dec.template({model: model.attributes});
           that.append(html);
         });
       }
       else {
-        html = binding.templates[tmpl]({model: binding.data.attributes});
+        html = binding.template({model: binding.data.attributes});
         that.append(html);
       }
     }
@@ -209,8 +225,8 @@
   Ribs.bindAll = function () {
     $('[data-bind]').each(function () {
       var el = $(this),
-          ribs = new Ribs();
-      ribs.bind(el, el.attr('data-bind'));
+          dec = Ribs.Parser._parse(el.attr('data-bind'));
+      Ribs.Bindings.bind(el, dec);
     });
   };
 }());
