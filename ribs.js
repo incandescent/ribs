@@ -1,4 +1,4 @@
-// Ribs
+// Ribs - Give your Backbone some Ribs - declarative bindings for Backbone.js
 (function () {
 
   // extend String with trim
@@ -186,8 +186,7 @@
       else {
         return this._getObjectByName(handler);
       }
-    },   
-  
+    }
   }
 
   // build-in handlers
