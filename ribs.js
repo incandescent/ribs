@@ -111,6 +111,10 @@
      *    2. render all collection items on initialization 
      *    3. re-render collection on collection change
      *
+     * TODO: cases which should be supported:
+     *    1. data:model:attr, event1:handler1, event2:handler2
+     *    2. model:event1:handler1, model:attr:event2:handler2
+     *
      * @param tokens {String} - represents binding expression
      * @param ctx {Object} - current context/namespace
      * @return binding {Ribs.Declaration} - declaration object
@@ -140,35 +144,37 @@
       if (!_.isArray(token) || token.length < 2) {
         throw new Error("Token " + token + " has a wrong format.");
       }
-
+      
       var key = token[0],
-          value = token[1],
-          extra = token[2],
-          attr,
+          v1 = token[1],
+          v2 = token[2],
           binding;
           
       switch (key) {
       case "data":
-        dec.data = this._getObjectByName(value, ctx);
+        dec.data = this._getObjectByName(v1, ctx);
         break;
       case "template":
-        dec.template = value;
+        dec.template = v1;
         break;
       case "option":
-        dec.options[value] = extra;
+        dec.options[v1] = v2;
         break;
-      default: // binding 
-       if (extra) {
+      default: // binding
+        binding = {event:key};
+       // 3th element present
+       if (v2) { 
           // backbone event
           if (BACKBONE_EVENTS.indexOf(key) > -1 || key.match(/init/)) {  
-            attr = value;
-            value = extra;
+            _.extend(binding, {attr:v1, handler:this._findHandler(v2)});
           }
           else {
-            attr = extra;
+            _.extend(binding, {attr:v2, handler:this._findHandler(v1)});
           }
         }
-        binding = {event: key, attr: attr, handler: this._findHandler(value)};
+        else {
+          _.extend(binding, {handler:this._findHandler(v1)});
+        }
         dec.bindings.push(binding);
       }
     },

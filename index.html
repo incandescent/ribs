@@ -4,29 +4,26 @@
     <title>Ribs</title>
   </head>
   <body>
-    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update, click:test" type="text" name="add" value="" />
-    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update" type="text" name="add" value="" />
-
+    <p>bind to model, update on keyup</p>
+    <input data-bind="keyup:set:color, data:car, init:color:update, change:color:update" type="text" name="text1" value="" /><br />
+    <p>bind to model, update on mouseout</p>
+    <input data-bind="mouseout:set:color, data:car, init:color:update, change:color:update" type="text" name="text2" value="" />
     <!-- render elements from given collection -->    
     <div id="list" data-bind="data:cars, init:render, all:render, template:car-tmpl"></div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
     <script id="car-tmpl" type="text/html">
       <div><%= model.color %> <%= model.type %></div>
     </script>
-    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
     <script src="vendor/underscore.js"></script>
     <script src="vendor/backbone.js"></script>
     <script>
-      var Car = Backbone.Model.extend({});
-
+      var Car = Backbone.Model;
       var Cars = Backbone.Collection.extend({
         model: Car
       });
 
-      function test() {
-        console.log('test');
-      }
       var car = new Car();
       car.set({color: "red"});
       var cars = new Cars();
