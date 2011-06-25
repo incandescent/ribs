@@ -4,33 +4,63 @@
     <title>Ribs</title>
   </head>
   <body>
-    <p>bind to model, update on keyup</p>
-    <input data-bind="data:car, keyup:set:color, init:color:update, change:color:update" type="text" name="text1" value="" />
-    <p>bind to model, update on mouseout</p>
-    <input data-bind="data:car, mouseout:set:color, init:color:update, change:color:update" type="text" name="text2" value="" />
-    <p>bind to collection, render template on collection change</p>
-    <!-- render elements from given collection -->    
-    <div id="list" data-bind="data:cars, init:render, all:render, template:car-tmpl"></div>
     
+    <p>bind to model, update on keyup</p>
+    <input data-bind="data:car:color, keyup:set, change:update" type="text" name="text1" value="" />
+    <p>bind to model, update on mouseout</p>
+    <input data-bind="data:car:color, mouseout:set, change:update" type="text" name="text2" value="" />
+    
+    <div data-bind="data:car:color, change:update"></div>
+    
+    <br />
+    <p>Radio buttons bind to model<p>
+    red:
+    <input name="color" type="radio" value="red" data-bind="data:car:color, onchange:set, change:update" />
+    green:
+    <input name="color" type="radio" value="green" data-bind="data:car:color, onchange:set, change:update" />
+    blue:
+    <input name="color" type="radio" value="blue" data-bind="data:car:color, onchange:set, change:update" />
+    
+    <br />
+    <!--
+    <p>bind to collection, render template on collection change</p>
+    <div id="list" data-bind="data:cars, all:render, template:car-tmpl"></div>-->
+    <p>checkbox bind to model:attr handles toggle</p>
+    <input type="checkbox" data-bind="data:car:ready, change:update, onchange:set" />
+    
+    <p>bind to select</p>
+    <select name="select" data-bind="data:car:color, onchange:set, change:update">
+      <option value="red">red</option>
+      <option value="green">green</option>
+      <option value="blue">blue</option>
+    </select>
+
+
+    <div data-bind="data:cars, change:render, template:car-tmpl"></div>
     <script id="car-tmpl" type="text/html">
       <div><%= model.color %> <%= model.type %></div>
     </script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+    <div data-bind="data:car:ready, change:toggle">toggle based on car:ready property</div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="../vendor/underscore.js"></script>
     <script src="../vendor/backbone.js"></script>
-    <script src="../ribs.js"></script>
+    <script src="../src/ribs.js"></script>
+    <script src="../src/bindings.js"></script>
+    <script src="../src/handlers.js"></script>
+    <script src="../src/parser.js"></script>
     <script>
       var Car = Backbone.Model;
       var Cars = Backbone.Collection.extend({
         model: Car
       });
 
-      var car = new Car();
-      car.set({color: "red"});
       var cars = new Cars();
-      cars.add(car);
-            
+      cars.add({color: "red"});
+      cars.add({color: "green"});
+      cars.add({color: "blue"});
+      var car = cars.first();
+      
       $(function () { Ribs.bindAll(); });
     </script>
   </body>
