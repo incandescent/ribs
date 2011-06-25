@@ -10,7 +10,7 @@
 
   var FORM_TAGS = ['input', 'select', 'textarea'];
 
-  // object which represents binding
+  // setup Ribs namespace
   if (typeof Ribs == "undefined") {
     var Ribs = this.Ribs = {};
   }
@@ -27,8 +27,7 @@
     $('[data-bind]').each(function () {
       var el = $(this),
           dec = Ribs.Parser._parse(el.attr('data-bind'));
-      console.log("test test test");
-      Ribs.Bindings.bind(el, dec);
+      dec.bind(el);
     });
   };
 }());

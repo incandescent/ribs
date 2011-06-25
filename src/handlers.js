@@ -3,7 +3,7 @@
   // build-in handlers
   // all handlers execute in the context of the current element
   // extend it if you want to add more handlers 
-  // TODO: refactor this with factory?
+  // TODO: refactor this with strategy?
   Ribs.handlers = {
     
     /**
