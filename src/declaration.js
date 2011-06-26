@@ -29,12 +29,12 @@
 
             that.execute(el, b, that);
           }
-        }
-
+        } 
+     
         // handle dom events
         if (b.isDomEvent()) {
           el.bind(b.getEvent(), function (e) {
-            b.handler.call(el, e, b, that);    
+            b.handler.call(el, that, b);    
           });
         }
       });
@@ -48,12 +48,12 @@
     *  @param {Ribs.Declaration} dec - declaration
     */
     execute: function (el, b, dec) {
-      if (b.attr) {
-        b.handler.call(el, b.attr, dec.data.get(b.attr), dec);
-      }
-      else {
+      //if (b.attr) {
         b.handler.call(el, dec, b);
-      }
+      //}
+      //else {
+      //  b.handler.call(el, dec, b);
+      //}
     }
   };
 })(Ribs);

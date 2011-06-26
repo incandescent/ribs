@@ -7,20 +7,18 @@
       return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     };
   }
-
-  var FORM_TAGS = ['input', 'select', 'textarea'];
-
+  
   // setup Ribs namespace
   if (typeof Ribs == "undefined") {
     var Ribs = this.Ribs = {};
   }
-  
-  // various utilities
-  Ribs.U = {
-    isFormEl: function (tagName) {
-      return _.include(FORM_TAGS, tagName.toLowerCase());
-    }
-  };
+
+  // backbone events
+  Ribs.bevents = ['add', 'change', 'remove', 'all', 'route', 'error'];
+  // dom events
+  Ribs.devents = ['click', 'mouseover', 'mouseout', 'keyup', 'keydown', 'keypress', 'onchange', 'mouseenter'];
+  // all events
+  Ribs.events = Ribs.bevents.concat(Ribs.devents);
 
   // entry
   Ribs.bindAll = function () {

@@ -88,14 +88,13 @@
         dec.data = this._getObjectByName(v1);
         dec.attr = v2;
         break;
-      case "template":
-        dec.template = v1;
-        break;
-      case "option":
-        dec.options[v1] = v2;
-        break;
-      default: // binding
-        this._parseBinding(token, dec);
+      default: 
+        if (_.include(Ribs.events, key)) {
+          this._parseBinding(token, dec); // events
+        }
+        else {
+          dec.options[key] = v1; // options
+        }
       }
     },
     

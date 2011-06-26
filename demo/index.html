@@ -4,7 +4,6 @@
     <title>Ribs</title>
   </head>
   <body>
-    
     <p>bind to model, update on keyup</p>
     <input data-bind="data:car:color, keyup:set, change:update" type="text" name="text1" value="" />
     <p>bind to model, update on mouseout</p>
@@ -13,12 +12,9 @@
     <div data-bind="data:car:color, change:update"></div>
     
     <br />
-    <p>Radio buttons bind to model<p>
-    red:
-    <input name="color" type="radio" value="red" data-bind="data:car:color, onchange:set, change:update" />
-    green:
+    <label data-bind="data:car:color, click:set">green</label>
     <input name="color" type="radio" value="green" data-bind="data:car:color, onchange:set, change:update" />
-    blue:
+    <label data-bind="data:car:color, click:set">blue</label>
     <input name="color" type="radio" value="blue" data-bind="data:car:color, onchange:set, change:update" />
     
     <br />
@@ -61,8 +57,12 @@
       cars.add({color: "green"});
       cars.add({color: "blue"});
       var car = cars.first();
-      
-      $(function () { Ribs.bindAll(); });
+      $(function () { 
+        Ribs.bindAll(); 
+        setTimeout(function () {
+          car.set(cars.last().attributes);
+        }, 1000);
+      });
     </script>
   </body>
 </html>
