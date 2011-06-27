@@ -1,22 +1,22 @@
-(function (Ribs) {
+(function (R) {
 
  /**
    * Binding constructor
    * @param {string} event
    * @param {function} handler
    */
-  Ribs.Binding = function (event, handler) {
+  R.Binding = function (event, handler) {
     this.event = event;
     this.handler = handler;
     this.eventName = event.replace(/^on/, '');
   };
 
-  Ribs.Binding.prototype = {
+  R.Binding.prototype = {
     isBackboneEvent: function () {
-      return _.include(Ribs.bevents, this.event);
+      return _.include(R.bevents, this.event);
     },
     isDomEvent: function () {
-      return _.include(Ribs.devents, this.event);
+      return _.include(R.devents, this.event);
     },
     hasAttr: function () {
       return (this.attr);
