@@ -47,10 +47,7 @@
     }
   };
  
-  // build-in handlers
-  // all handlers execute in the context of the current DOM element
-  // extend it if you want to add more handlers 
-  // TODO: refactor this with strategy?
+  // proxy for handlers
   R.handlers = {
     // init hook
     init: function (dec) {
@@ -70,7 +67,10 @@
         dec.data.set(value);
       }
     },
-
+    
+    /**
+      * Sets current model 
+      */
     setCurrent: function (dec, b) {
       var type = this.getType();
       
