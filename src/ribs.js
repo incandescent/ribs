@@ -1,4 +1,7 @@
-// Ribs - Give your Backbone some Ribs - declarative bindings for Backbone.js
+//     Ribs.js 0.1.0
+//     (c) 2011 Michal Kuklis, Incandescent Software.
+//     Ribs may be freely distributed under the MIT license.
+
 (function () {
 
   // extend String with trim
