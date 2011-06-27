@@ -10,21 +10,42 @@
   
   // setup Ribs namespace
   if (typeof Ribs == "undefined") {
-    var Ribs = this.Ribs = {};
+    var Ribs = this.Ribs = {},
+        R = Ribs;
   }
 
   // backbone events
-  Ribs.bevents = ['add', 'change', 'remove', 'all', 'route', 'error'];
+  R.bevents = ['add', 'change', 'remove', 'all', 'route', 'error'];
   // dom events
-  Ribs.devents = ['click', 'mouseover', 'mouseout', 'keyup', 'keydown', 'keypress', 'onchange', 'mouseenter'];
+  R.devents = ['click', 'mouseover', 'mouseout', 'keyup', 'keydown', 'keypress', 'onchange', 'mouseenter'];
   // all events
-  Ribs.events = Ribs.bevents.concat(Ribs.devents);
+  R.events = R.bevents.concat(R.devents);
+
+  /**
+    * Returns object for given name.
+    *
+    * @param objStr {String} String representation of the object.
+    * @return object
+    */
+  R.getObjectByName = function (objStr) {
+    var obj = R.ctx;
+    _(objStr.split('.')).each(function (prop) {
+      if (obj.hasOwnProperty(prop)) {
+        obj = obj[prop];
+      }
+      else {
+        throw new Error("Object or function '" + objStr + "' not found.");
+      }
+    });
+    return obj;
+  };
 
   // entry
-  Ribs.bindAll = function () {
+  R.bindAll = function (ctx) {
+    R.ctx = ctx || window;
     $('[data-bind]').each(function () {
       var el = $(this),
-          dec = Ribs.Parser._parse(el.attr('data-bind'));
+          dec = R.Parser._parse(el.attr('data-bind'));
       dec.bind(el);
     });
   };

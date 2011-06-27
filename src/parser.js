@@ -1,7 +1,7 @@
-(function (Ribs) {
+(function (R) {
 
   // Ribs parser and linker
-  Ribs.Parser = {
+  R.Parser = {
  
     /**
      * Converts declarative binding expressions into declaration object
@@ -36,14 +36,12 @@
      * @param {object} ctx - current context/namespace
      * @return {Ribs.Declaration} declaration - declaration object
      */
-    _parse: function (expr, ctx) {
+    _parse: function (expr) {
       var tokens = expr.split(','),
-          dec = new Ribs.Declaration(),
-          token, i, l;
-      
-      this.ctx = ctx || window; 
+          dec = new R.Declaration(),
+          token;
        
-      for (i = 0, l = tokens.length; i < l; i++) {
+      for (var i = 0, l = tokens.length; i < l; i++) {
         token = tokens[i].trim().split(':');
         this._parseToken(token, dec);
       }
@@ -85,11 +83,11 @@
           
       switch (key) {
       case "data":
-        dec.data = this._getObjectByName(v1);
+        dec.data = R.getObjectByName(v1);
         dec.attr = v2;
         break;
       default: 
-        if (_.include(Ribs.events, key)) {
+        if (_.include(R.events, key)) {
           this._parseBinding(token, dec); // events
         }
         else {
@@ -106,27 +104,8 @@
     _parseBinding: function (token, dec) {
       var event = token[0],
           handler = this._findHandler(token[1]),
-          binding = new Ribs.Binding(event, handler);
+          binding = new R.Binding(event, handler);
       dec.bindings.push(binding);
-    },
-
-    /**
-     * Returns object for given name.
-     *
-     * @param objStr {String} String representation of the object.
-     * @return object
-     */
-    _getObjectByName: function (objStr) {
-      var obj = this.ctx;
-      _(objStr.split('.')).each(function (prop) {
-        if (obj.hasOwnProperty(prop)) {
-          obj = obj[prop];
-        }
-        else {
-          throw new Error("Object or function '" + objStr + "' not found.");
-        }
-      });
-      return obj;
     },
 
     /**
@@ -136,11 +115,11 @@
     *
     */
     _findHandler: function (handler) {
-      if (Ribs.handlers[handler]) {
-        return Ribs.handlers[handler];
+      if (R.handlers[handler]) {
+        return R.handlers[handler];
       }
       else {
-        return this._getObjectByName(handler);
+        return R.getObjectByName(handler);
       }
     }
   }

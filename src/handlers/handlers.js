@@ -1,4 +1,4 @@
-(function (Ribs) {
+(function (R) {
  
   // returns element's tag name
   $.fn.tagName = function () {
@@ -28,7 +28,7 @@
   };
   
   // 'interface' for elements
-  function El(props) {
+  R.El = function (props) {
     for (var attr in props) {
       if (props.hasOwnProperty(attr)) {
         this[attr] = props[attr];
@@ -36,7 +36,9 @@
     }
   };
 
-  El.prototype = {
+  R.El.prototype = {
+    init: function (dec) {},
+    getCurrent: function () {},
     update: function (value) {
       this.val(value);
     },
@@ -44,66 +46,45 @@
       return this.val();
     }
   };
-
-  // checkbox handlers
-  Ribs.checkbox = new El({
-    update: function (value) {
-      this.attr('checked', value);
-      this.val(value);
-    },
-    getValue: function (e, b) {
-      return this.is(':checked');
-    }
-  });
-  
-  // radio handlers
-  Ribs.radio = new El({
-    update: function (value) {
-      if (this.val() === value) {
-        this.attr('checked', true);
-      }
-      else {
-        this.removeAttr('checked');
-      }
-    }
-  });
-  
-  // select handlers
-  Ribs.select = new El({
-    //update: function (value) {
-     // console.log(value);
-    //}
-  });
-  
-  // text handlers
-  Ribs.text = new El({
-    update: function (value) {
-      this.text(value);
-    },
-    getValue: function () {
-      return this.text();
-    }
-  });
-  
-  // value handlers
-  Ribs.input = new El();
-
+ 
   // build-in handlers
   // all handlers execute in the context of the current DOM element
   // extend it if you want to add more handlers 
   // TODO: refactor this with strategy?
-  Ribs.handlers = {
-    
+  R.handlers = {
+    // init hook
+    init: function (dec) {
+      var type = this.getType();
+      R[type].init.call(this, dec);
+    },
+
     /**
      * Sets value on attribute which belongs to model or collection.
      */
     set: function (dec, b) {    
       if (b.attr) {
-        var value = {};
-            val = Ribs[this.getType()].getValue.apply(this, arguments);
+        var type = this.getType(),
+            val = R[type].getValue.apply(this, arguments),
+            value = {};
         value[b.attr] = val;
         dec.data.set(value);
       }
+    },
+
+    setCurrent: function (dec, b) {
+      var type = this.getType();
+      
+      if (!dec.options.current) { 
+        throw new Error('no current element found for ' +  this);
+      }
+
+      if (typeof dec.options.current == "string") {
+        dec.options.current = R.getObjectByName(dec.options.current);
+      }
+
+      var model = R[type].getCurrent.call(this);
+      dec.options.current.set(model.attributes);
+      dec.options.current.cid = model.cid;
     },
     
     /**
@@ -111,8 +92,9 @@
      */
     update: function (dec, b) {
       if (b.attr) {
-        var value = b.data.get(b.attr);      
-        Ribs[this.getType()].update.call(this, value); 
+        var value = b.data.get(b.attr), 
+            type = this.getType();
+        R[type].update.call(this, value); 
       }
     },
     
@@ -144,6 +126,7 @@
         that.html(html);
       }
     },
+
     toggle: function (dec, b) {
       this.toggle(b.data.get(b.attr));
     }

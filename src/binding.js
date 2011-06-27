@@ -3,7 +3,7 @@
  /**
    * Binding constructor
    * @param {string} event
-   * @param {function) handler
+   * @param {function} handler
    */
   Ribs.Binding = function (event, handler) {
     this.event = event;
