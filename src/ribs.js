@@ -45,7 +45,7 @@
     R.ctx = ctx || window;
     $('[data-bind]').each(function () {
       var el = $(this),
-          dec = R.Parser._parse(el.attr('data-bind'));
+          dec = R.Parser.parse(el.attr('data-bind'));
       dec.bind(el);
     });
   };

@@ -36,7 +36,7 @@
      * @param {object} ctx - current context/namespace
      * @return {Ribs.Declaration} declaration - declaration object
      */
-    _parse: function (expr) {
+    parse: function (expr) {
       var tokens = expr.split(','),
           dec = new R.Declaration(),
           token;
@@ -81,18 +81,15 @@
           v1 = token[1],
           v2 = token[2];
           
-      switch (key) {
-      case "data":
+      if (key === "data") {
         dec.data = R.getObjectByName(v1);
         dec.attr = v2;
-        break;
-      default: 
-        if (_.include(R.events, key)) {
-          this._parseBinding(token, dec); // events
-        }
-        else {
-          dec.options[key] = v1; // options
-        }
+      }
+      else if (_.include(R.events, key)) {
+        this._parseBinding(token, dec); // events
+      }
+      else {
+        dec.options[key] = v1; // options
       }
     },
     
