@@ -42,7 +42,7 @@
     });
     return obj;
   };
-
+  
   // entry
   R.bindAll = function (ctx) {
     R.ctx = ctx || window;
