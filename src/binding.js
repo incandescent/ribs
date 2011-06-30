@@ -5,10 +5,11 @@
    * @param {string} event
    * @param {function} handler
    */
-  R.Binding = function (event, handler) {
+  R.Binding = function (event, handler, attr) {
     this.event = event;
     this.handler = handler;
     this.eventName = event.replace(/^on/, '');
+    this.attr = attr;
   };
 
   R.Binding.prototype = {
@@ -26,6 +27,9 @@
     },
     getEventName: function () {
       return (this.hasAttr()) ? this.eventName + ":" + this.attr : this.eventName;
+    },
+    setAttr: function (attr) {
+      this.attr = attr;
     }
   };
 })(Ribs);
