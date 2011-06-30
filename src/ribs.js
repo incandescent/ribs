@@ -18,26 +18,26 @@
   }
 
   // backbone events
-  R.bevents = ['add', 'change', 'remove', 'all', 'route', 'error'];
+  R.bevents = "add change remove all route error".split(' ');
   // dom events
-  R.devents = ['click', 'mouseover', 'mouseout', 'keyup', 'keydown', 'keypress', 'onchange', 'mouseenter'];
+  R.devents = "click mouseover mouseout keyup keydown keypress onchange mouseenter".split(' ');
   // all events
   R.events = R.bevents.concat(R.devents);
 
   /**
     * Returns object for given name.
     *
-    * @param objStr {String} String representation of the object.
+    * @param name {String} String representation of the object.
     * @return object
     */
-  R.getObjectByName = function (objStr) {
+  R.getObj = function (name) {
     var obj = R.ctx;
-    _(objStr.split('.')).each(function (prop) {
+    _(name.split('.')).each(function (prop) {
       if (obj.hasOwnProperty(prop)) {
         obj = obj[prop];
       }
       else {
-        throw new Error("Object or function '" + objStr + "' not found.");
+        throw new Error("Object or function '" + name + "' not found.");
       }
     });
     return obj;
@@ -48,7 +48,7 @@
     R.ctx = ctx || window;
     $('[data-bind]').each(function () {
       var el = $(this),
-          dec = R.Parser.parse(el.attr('data-bind'));
+          dec = R.parser.parse(el.attr('data-bind'));
       dec.bind(el);
     });
   };

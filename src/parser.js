@@ -1,7 +1,7 @@
 (function (R) {
 
   // Ribs parser and linker
-  R.Parser = {
+  R.parser = {
  
     /**
      * Converts declarative binding expressions into declaration object
@@ -56,12 +56,12 @@
     * @param {Ribs.Declaration} dec - declaration
     */
     _updateBindings: function (dec) {
-      _(dec.bindings).each(function (binding, index) {           
-        if (!binding.data) {
-          binding.data = dec.data;
+      _(dec.bindings).each(function (b, i) {           
+        if (!b.data) {
+          b.data = dec.data;
         }
-        if (!binding.attr) {
-          binding.attr = dec.attr;
+        if (!b.attr) {
+          b.attr = dec.attr;
         }
       });
     },
@@ -73,23 +73,25 @@
      */
     _parseToken: function (token, dec) {
       
+      var k, v1, v2;
+
       if (!_.isArray(token) || token.length < 2) {
         throw new Error("Token " + token + " has a wrong format.");
       }
       
-      var key = token[0],
-          v1 = token[1],
-          v2 = token[2];
+      k = token[0];
+      v1 = token[1],
+      v2 = token[2];
           
-      if (key === "data") {
-        dec.data = R.getObjectByName(v1);
+      if (k === "data") {
+        dec.data = R.getObj(v1);
         dec.attr = v2;
       }
-      else if (_.include(R.events, key)) {
+      else if (_.include(R.events, k)) {
         this._parseBinding(token, dec); // events
       }
       else {
-        dec.options[key] = v1; // options
+        dec.options[k] = v1; // options
       }
     },
     
@@ -99,10 +101,10 @@
      * @param {Ribs.Declaration} dec
      */
     _parseBinding: function (token, dec) {
-      var event = token[0],
-          handler = this._findHandler(token[1]),
-          binding = new R.Binding(event, handler);
-      dec.bindings.push(binding);
+      var e = token[0],
+          h = this._findHandler(token[1]),
+          b = new R.Binding(e, h);
+      dec.bindings.push(b);
     },
 
     /**
@@ -116,7 +118,7 @@
         return R.handlers[handler];
       }
       else {
-        return R.getObjectByName(handler);
+        return R.getObj(handler);
       }
     }
   }

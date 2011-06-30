@@ -16,7 +16,7 @@
           v, s;
 
       if (c) {
-        c = R.getObjectByName(c);
+        c = R.getObj(c);
       }
           
       if (data.models) {
