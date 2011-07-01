@@ -13,10 +13,6 @@ describe("Ribs.Declaration", function () {
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
-    var counter = 0;
-    this.handler = function () {
-      counter += 1;
-    }
   });
 
   afterEach(function () {
@@ -25,8 +21,13 @@ describe("Ribs.Declaration", function () {
     Ribs.ctx = null;
   });
 
-  describe("when bind is executed on given element", function () {
+  describe("#bind", function () {
     it("should bind to click event", function () {
+      this.handler = sinon.spy();
+      setFixtures('<input id="text" type="text" data-bind="data:car:color, click:handler" />');
+      Ribs.bindAll(this);
+      $("#text").trigger('click');
+      expect(this.handler.called).toBeTruthy();
     });
   });
 });
