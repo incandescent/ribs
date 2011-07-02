@@ -22,12 +22,24 @@ describe("Ribs.Declaration", function () {
   });
 
   describe("#bind", function () {
-    it("should bind to click event", function () {
-      this.handler = sinon.spy();
-      setFixtures('<input id="text" type="text" data-bind="data:car:color, click:handler" />');
-      Ribs.bindAll(this);
-      $("#text").trigger('click');
-      expect(this.handler.called).toBeTruthy();
+
+    describe("when click event is fired", function () {
+      it("should execute handler", function () {
+        this.handler = sinon.spy();
+        setFixtures('<input id="text" type="text" data-bind="data:car:color, click:handler" />');
+        Ribs.bindAll(this);
+        $("#text").trigger('click');
+        expect(this.handler.called).toBeTruthy();
+      });
+    });
+
+    describe("when model attribute is changed", function () {
+      it("should change input text value", function () {
+        setFixtures('<input id="text" type="text" data-bind="data:car:color, change:update" />');
+        Ribs.bindAll(this);
+        this.car.set({color: "blue"});
+        expect($('#text').val()).toBe("blue");
+      });
     });
   });
 });
