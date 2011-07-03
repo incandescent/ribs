@@ -1,6 +1,8 @@
 describe("Ribs.Declaration", function () {
  
   beforeEach(function () {
+    this.addMatchers(eventMatchers);
+
     var Car = Backbone.Model;
     this.car = new Car();
 
@@ -21,15 +23,15 @@ describe("Ribs.Declaration", function () {
     Ribs.ctx = null;
   });
 
-  describe("#bind", function () {
-
-    describe("when click event is fired", function () {
-      it("should execute handler", function () {
+  describe("Event", function () {
+    describe("when biding with click event is present", function () {
+      it("should be bound to element", function () {
         this.handler = sinon.spy();
         setFixtures('<input id="text" type="text" data-bind="data:car:color, click:handler" />');
         Ribs.bindAll(this);
-        $("#text").trigger('click');
-        expect(this.handler.called).toBeTruthy();
+        expect($('#text')).toHaveEvent('click');
+        //$("#text").trigger('click');
+        //expect(this.handler.called).toBeTruthy();
       });
     });
 
