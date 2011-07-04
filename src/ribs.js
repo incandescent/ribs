@@ -17,6 +17,8 @@
         R = Ribs;
   }
 
+  R.version = '0.1';
+
   // backbone events
   R.bevents = "add change remove all route error".split(' ');
   // dom events
