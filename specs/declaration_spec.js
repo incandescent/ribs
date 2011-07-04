@@ -10,28 +10,34 @@ describe("Ribs.Declaration", function () {
       model: Car  
     });
     
-    Ribs.ctx = this; // set ribs context
-    
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
+    Ribs.ctx = this;
   });
 
   afterEach(function () {
     this.cars = null;
     this.car = null;
-    Ribs.ctx = null;
   });
 
   describe("Event", function () {
-    describe("when biding with click event is present", function () {
+    describe("when dom event is present", function () {
       it("should be bound to element", function () {
         this.handler = sinon.spy();
-        setFixtures('<input id="text" type="text" data-bind="data:car:color, click:handler" />');
-        Ribs.bindAll(this);
-        expect($('#text')).toHaveEvent('click');
-        //$("#text").trigger('click');
-        //expect(this.handler.called).toBeTruthy();
+        var bind = "data:car:color",
+            dec;
+        
+        _(Ribs.devents).each(function (event) {
+          bind += ", " + event + ":handler";
+        });
+        setFixtures('<input id="text" type="text" data-bind="' + bind + '" />');
+        dec = Ribs.parser.parse($('#text').attr('data-bind'));
+        dec.bind($('#text'));
+       
+        _(dec.bindings).each(function (binding) {
+          expect($('#text')).toHaveEvent(binding.getEvent());
+        });
       });
     });
 
