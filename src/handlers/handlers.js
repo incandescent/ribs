@@ -1,8 +1,8 @@
 (function (R) {
- 
+
   // returns element's tag name
   $.fn.tagName = function () {
-    return this.get(0).tagName.toLowerCase(); 
+    return this.get(0).tagName.toLowerCase();
   };
 
   // returns one of the types:
@@ -26,7 +26,7 @@
       return "text";
     }
   };
-  
+
   // 'interface' for elements
   R.El = function (props) {
     for (var attr in props) {
@@ -46,7 +46,7 @@
       return this.val();
     }
   };
- 
+
   // proxy for handlers
   R.handlers = {
     // init hook
@@ -58,7 +58,7 @@
     /**
      * Sets value on attribute which belongs to model or collection.
      */
-    set: function (dec, b) {    
+    set: function (dec, b) {
       if (b.attr) {
         var type = this.getType(),
             val = R[type].getValue.apply(this, arguments),
@@ -67,41 +67,41 @@
         dec.data.set(value);
       }
     },
-    
+
     /**
-      * Sets current model 
+      * Sets current model
       */
     setCurrent: function (dec, b) {
       var type = this.getType();
-      
-      if (!dec.options.current) { 
+
+      if (!dec.options.current) {
         throw new Error('no current element found for ' +  this);
       }
 
       if (typeof dec.options.current == "string") {
-        dec.options.current = R.getObjectByName(dec.options.current);
+        dec.options.current = R.getObj(dec.options.current);
       }
 
       var model = R[type].getCurrent.call(this);
       dec.options.current.set(model.attributes);
       dec.options.current.cid = model.cid;
     },
-    
+
     /**
-     * Updates DOM element's value. 
+     * Updates DOM element's value.
      */
     update: function (dec, b) {
       if (b.attr) {
-        var value = b.data.get(b.attr), 
+        var value = b.data.get(b.attr),
             type = this.getType();
-        R[type].update.call(this, value); 
+        R[type].update.call(this, value);
       }
     },
-    
+
     render: function (dec, b) {
       var that = this,
           html;
-      
+
       if (!dec.options.template) {
         throw new Error('no template present for element: ' + this);
       }
@@ -111,7 +111,7 @@
         html = $("#" + dec.options.template).html();
         dec.options.template = _.template(html);
       }
-      
+
       var t = dec.options.template;
 
       if (b.data.models) {
