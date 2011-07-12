@@ -30,7 +30,7 @@ describe("Ribs.Declaration", function () {
 
   describe("Handler", function (){
     describe("when view is present", function () {
-      it("should execute in the context of view", function () {
+      it("should execute in the context of the view", function () {
         setFixtures('<div id="el" type="text" data-bind="data:car:color, view:view, change:render" />');
         Ribs.bindAll(this);
 
