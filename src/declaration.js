@@ -30,7 +30,7 @@
       _(this.bindings).each(function (b) {
         if (b.isBackboneEvent()) {
           that.data.bind(b.getEventName(), that.execute(el, b));
-          b.handler.call(el, that, b);
+          //b.handler.call(el, that, b);
         }
         else if (b.isDomEvent()) {
           el.bind(b.getEvent(), that.execute(el, b));
@@ -51,7 +51,15 @@
     execute: function (el, binding) {
       var that = this;
       return function () {
-        binding.handler.call(el, that, binding);
+        if (that.view) {
+          // TODO move this outside of here
+          // this won't work with nested elements with view present
+          that.view.el = el;
+          binding.handler.call(that.view);
+        }
+        else {
+          binding.handler.call(el, that, binding);
+        }
       }
     }
   };

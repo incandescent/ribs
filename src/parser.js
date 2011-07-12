@@ -57,6 +57,20 @@
     */
     _updateBindings: function (dec) {
       var that = this;
+
+      // TODO refactor this
+      if (dec.view) {
+        // wire backbone view with data
+        if (dec.data.models) {
+          dec.view.options.collection = dec.data;
+          dec.view.collection = dec.data;
+        }
+        else {
+          dec.view.options.model = dec.data;
+          dec.view.model = dec.data;
+        }
+      }
+
       _(dec.bindings).each(function (b, i) {
 
         if (!b.data) {

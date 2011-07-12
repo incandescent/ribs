@@ -8,10 +8,12 @@ describe("Ribs.parser", function () {
       model: Car
     });
 
-    this.view = Backbone.View.extend({
+    var View = Backbone.View.extend({
       render: function () {
       }
     });
+
+    this.view = new View();
 
     Ribs.ctx = this; // set ribs context
 

@@ -5,7 +5,7 @@ describe("Ribs.Binding", function () {
       expect(binding.event).toBe("click");
       expect(binding.getEvent()).toBe('click');
     });
-    
+
     it("should contain handler", function () {
       var handler = function () {},
           binding = new Ribs.Binding("click", handler);
@@ -29,7 +29,7 @@ describe("Ribs.Binding", function () {
       expect(binding.hasAttr()).toBeTruthy();
       expect(binding.attr).toBe("color");
     });
-    
+
     it("should not contain attribute", function () {
       var binding = new Ribs.Binding("change", function () {});
       expect(binding.hasAttr()).toBeFalsy();
