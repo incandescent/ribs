@@ -5,11 +5,16 @@ describe("Ribs.parser", function () {
     this.car = new Car();
 
     var Cars = Backbone.Collection.extend({
-      model: Car  
+      model: Car
     });
-    
+
+    this.view = Backbone.View.extend({
+      render: function () {
+      }
+    });
+
     Ribs.ctx = this; // set ribs context
-    
+
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
@@ -17,23 +22,29 @@ describe("Ribs.parser", function () {
     this.handler = function () {
       counter += 1;
     }
-  });
+ });
 
   afterEach(function () {
     this.cars = null;
     this.car = null;
+    this.view = null;
     Ribs.ctx = null;
   });
 
-  describe("when parsing and creating declaration", function () { 
+  describe("when parsing and creating declaration", function () {
     it("should reference model", function () {
       var dec = Ribs.parser.parse('data:car');
       expect(dec.data).toBe(this.car);
     });
-            
+
     it("should reference collection", function () {
       var dec = Ribs.parser.parse('data:cars');
       expect(dec.data).toBe(this.cars);
+    });
+
+    it("should reference view", function () {
+      var dec = Ribs.parser.parse('data:cars, view:view');
+      expect(dec.view).toBe(this.view);
     });
 
     it("should reference model and create one binding", function () {
@@ -60,9 +71,9 @@ describe("Ribs.parser", function () {
       expect(dec.options).toBeTruthy();
       expect(dec.options.template).toBe('cars-tmpl');
     });
-    
+
     it("shouldn't contain model", function () {
-      var dec = Ribs.parser.parse('click:handler'); 
+      var dec = Ribs.parser.parse('click:handler');
       expect(dec.data).toBeFalsy();
     });
 
@@ -78,4 +89,4 @@ describe("Ribs.parser", function () {
       }).toThrow(new Error("Object or function 'wrongHandler' not found."));
     });
   });
-});              
+});

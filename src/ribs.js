@@ -5,12 +5,12 @@
 (function () {
 
   // extend String with trim
-  if (typeof String.trim == "undefined") { 
+  if (typeof String.trim == "undefined") {
     String.prototype.trim = function () {
       return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     };
   }
-  
+
   // setup Ribs namespace
   if (typeof Ribs == "undefined") {
     var Ribs = this.Ribs = {},
@@ -44,7 +44,7 @@
     });
     return obj;
   };
-  
+
   // entry
   R.bindAll = function (ctx) {
     R.ctx = ctx || window;

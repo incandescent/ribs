@@ -1,5 +1,5 @@
 var eventMatchers = {
-  toHaveEvent: function (event) {   
+  toHaveEvent: function (event) {
     var data = jQuery.data(this.actual.get(0));
     for (obj in data) {
       if (data.hasOwnProperty(obj)) {
@@ -12,6 +12,7 @@ var eventMatchers = {
         }
       }
     }
+    this.actual = $('<div />').append(this.actual.clone()).html();
     return false;
   },
 

@@ -52,17 +52,22 @@
     },
 
     /**
-    * Updates bindings with missing attributes
+    * Link handlers to bidings
     * @param {Ribs.Declaration} dec - declaration
     */
     _updateBindings: function (dec) {
+      var that = this;
       _(dec.bindings).each(function (b, i) {
+
         if (!b.data) {
           b.data = dec.data;
         }
+
         if (!b.attr) {
           b.attr = dec.attr;
         }
+
+        b.handler = (dec.view) ? dec.view[b.handler] : that._findHandler(b.handler);
       });
     },
 
@@ -83,15 +88,21 @@
       v1 = token[1];
       v2 = token[2];
 
-      if (k === "data") {
+      switch (k) {
+      case "data":
         dec.data = R.getObj(v1);
         dec.attr = v2;
-      }
-      else if (_.include(R.events, k)) {
-        this._parseBinding(token, dec); // events
-      }
-      else {
-        dec.options[k] = v1; // options
+        break;
+      case "view":
+        dec.view = R.getObj(v1);
+        break;
+      default:
+        if (_.include(R.events, k)) {
+          this._parseBinding(token, dec); // events
+        }
+        else {
+          dec.options[k] = v1; // options
+        }
       }
     },
 
@@ -102,7 +113,7 @@
      */
     _parseBinding: function (token, dec) {
       var e = token[0],
-          h = this._findHandler(token[1]),
+          h = token[1],
           b = new R.Binding(e, h);
       dec.bindings.push(b);
     },
