@@ -3,8 +3,8 @@
   R.parser = {
 
     /**
-    * Link handlers to bidings
-    * @param {Ribs.Declaration} dec - declaration
+    * Converts expression to declaration
+    * @param {string} expr - expression
     */
     parse: function (exp, el) {
       var that = this,
