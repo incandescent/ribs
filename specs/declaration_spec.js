@@ -15,6 +15,7 @@ describe("Ribs.Declaration", function () {
         this.el.html('render executed');
       }
     });
+
     this.view = new View();
     this.cars = new Cars();
     this.car.set({'color': 'red'});
@@ -66,8 +67,8 @@ describe("Ribs.Declaration", function () {
       it("should change input text value", function () {
         setFixtures('<input id="text" type="text" data-bind="data:car:color, change:update" />');
         Ribs.bindAll(this);
-        //this.car.set({color: "blue"});
-        //expect($('#text').val()).toBe("blue");
+        this.car.set({color: "blue"});
+        expect($('#text').val()).toBe("blue");
       });
     });
   });

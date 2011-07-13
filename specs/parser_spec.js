@@ -75,14 +75,15 @@ describe("Ribs.parser", function () {
     });
 
     it("shouldn't contain model", function () {
-      var dec = Ribs.parser.parse('click:handler');
-      expect(dec.data).toBeFalsy();
+      expect(function () {
+        Ribs.parser.parse('click:handler');
+      }).toThrow(new Error('data attribute is missing'));
     });
 
     it("should throw an exception about wrong format", function () {
       expect(function () {
         Ribs.parser.parse('data');
-      }).toThrow(new Error('Token data has a wrong format.'));
+      }).toThrow(new Error('Block data has a wrong format.'));
     });
 
     it("should throw an exception about missing handler", function () {

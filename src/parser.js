@@ -1,135 +1,52 @@
 (function (R) {
 
-  // Ribs parser and linker
   R.parser = {
-
-    /**
-     * Converts declarative binding expressions into declaration object
-     *
-     * Current declarative format can contain following elements:
-     *
-     *   data - backbone model or collection,
-     *   template - template used for rendering
-     *   bindings - array of pairs: event:handler. All Ribs events are supported. Additionary
-     *             custom events can be defined. All handlers should be added to Ribs.Handlers
-     *   options - hash of additional options which could be used by handlers
-     *
-     * Examples of declarative attributes which become bindings:
-     *
-     *    data:car:color, change:set
-     *
-     * which translates into:
-     *
-     *    1. bind to car model,
-     *    2. set value of current element to model.color attribute during initialization
-     *    3. set value of current element to model.color attribute on every change
-     *
-     *    data:cars, init:render, all:render, template:car-tmpl
-     *
-     * which translates into:
-     *
-     *    1. bind to collection cars,
-     *    2. render all collection items on initialization
-     *    3. re-render collection on collection change
-     *
-     * @param {string} expr - represents binding expression
-     * @param {object} ctx - current context/namespace
-     * @return {Ribs.Declaration} declaration - declaration object
-     */
-    parse: function (expr) {
-      var tokens = expr.split(','),
-          dec = new R.Declaration(),
-          token;
-
-      for (var i = 0, l = tokens.length; i < l; i++) {
-        token = tokens[i].trim().split(':');
-        this._parseToken(token, dec);
-      }
-
-      this._updateBindings(dec);
-
-      return dec;
-    },
 
     /**
     * Link handlers to bidings
     * @param {Ribs.Declaration} dec - declaration
     */
-    _updateBindings: function (dec) {
-      var that = this;
+    parse: function (exp, el) {
+      var that = this,
+          t = R.scanner.scan(exp),
+          d = new R.Declaration();
 
-      // TODO refactor this
-      if (dec.view) {
-        // wire backbone view with data
-        if (dec.data.models) {
-          dec.view.options.collection = dec.data;
-          dec.view.collection = dec.data;
-        }
-        else {
-          dec.view.options.model = dec.data;
-          dec.view.model = dec.data;
-        }
+      if (typeof t.data == "undefined") {
+        throw new Error("data attribute is missing");
       }
 
-      _(dec.bindings).each(function (b, i) {
+      d.data = R.getObj(t.data);
+      d.attr = t.attr;
+      d.options = t.options;
 
-        if (!b.data) {
-          b.data = dec.data;
-        }
+      if (t.view) {
+        this._processView(d, t, el);
+      }
 
-        if (!b.attr) {
-          b.attr = dec.attr;
-        }
-
-        b.handler = (dec.view) ? dec.view[b.handler] : that._findHandler(b.handler);
+      // process bindings
+      _(t.bindings).each(function (b, i) {
+        b.data = d.data;
+        b.attr = d.attr;
+        b.handler = (d.view) ? d.view[b.handler] : that._findHandler(b.handler);
+        d.bindings.push(b);
       });
+
+      return d;
     },
 
-    /**
-     * Parses single token and updates binding object.
-     * @param {array} token
-     * @param {Ribs.Declaration} dec
-     */
-    _parseToken: function (token, dec) {
-
-      var k, v1, v2;
-
-      if (!_.isArray(token) || token.length < 2) {
-        throw new Error("Token " + token + " has a wrong format.");
+    _processView: function (d, t, el) {
+      d.view = R.getObj(t.view);
+      // wire backbone view with data
+      if (d.data.models) {
+        d.view.options.collection = d.view.collection = d.data;
       }
-
-      k = token[0];
-      v1 = token[1];
-      v2 = token[2];
-
-      switch (k) {
-      case "data":
-        dec.data = R.getObj(v1);
-        dec.attr = v2;
-        break;
-      case "view":
-        dec.view = R.getObj(v1);
-        break;
-      default:
-        if (_.include(R.events, k)) {
-          this._parseBinding(token, dec); // events
-        }
-        else {
-          dec.options[k] = v1; // options
-        }
+      else {
+        d.view.options.model = d.view.model = d.data;
       }
-    },
-
-    /**
-     * Parses single binding.
-     * @param {array} token
-     * @param {Ribs.Declaration} dec
-     */
-    _parseBinding: function (token, dec) {
-      var e = token[0],
-          h = token[1],
-          b = new R.Binding(e, h);
-      dec.bindings.push(b);
+      // el is not jQuery or Zepto
+      if (!(d.view instanceof $)) {
+        d.view.el = el;
+      }
     },
 
     /**

@@ -1,6 +1,6 @@
-//     Ribs.js 0.1.0
-//     (c) 2011 Michal Kuklis, Incandescent Software.
-//     Ribs may be freely distributed under the MIT license.
+//  Ribs.js 0.1.0
+//  (c) 2011 Michal Kuklis, Incandescent Software.
+//  Ribs may be freely distributed under the MIT license.
 
 (function () {
 
@@ -27,11 +27,11 @@
   R.events = R.bevents.concat(R.devents);
 
   /**
-    * Returns object for given name.
-    *
-    * @param name {String} String representation of the object.
-    * @return object
-    */
+   * Returns object for given name.
+   *
+   * @param name {String} String representation of the object.
+   * @return object
+   */
   R.getObj = function (name) {
     var obj = R.ctx;
     _(name.split('.')).each(function (prop) {
@@ -50,7 +50,7 @@
     R.ctx = ctx || window;
     $('[data-bind]').each(function () {
       var el = $(this),
-          dec = R.parser.parse(el.attr('data-bind'));
+          dec = R.parser.parse(el.attr('data-bind'), el);
       dec.bind(el);
     });
   };

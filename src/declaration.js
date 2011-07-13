@@ -22,18 +22,16 @@
     bind: function (el) {
       var that = this;
 
-      if (!this.data) {
-        throw new Error('data attribute is missing for: ' + el);
-      }
-
       // proccess all bindings
       _(this.bindings).each(function (b) {
+        var handler = that.execute(el, b);
         if (b.isBackboneEvent()) {
-          that.data.bind(b.getEventName(), that.execute(el, b));
-          //b.handler.call(el, that, b);
+          that.data.bind(b.getEventName(), handler);
+          // execute handler initially
+          handler();
         }
         else if (b.isDomEvent()) {
-          el.bind(b.getEvent(), that.execute(el, b));
+          el.bind(b.getEvent(), handler);
         }
       });
 
@@ -52,9 +50,6 @@
       var that = this;
       return function () {
         if (that.view) {
-          // TODO move this outside of here
-          // this won't work with nested elements with view present
-          that.view.el = el;
           binding.handler.call(that.view);
         }
         else {
