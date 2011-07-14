@@ -31,7 +31,7 @@
 
     <div data-bind="data:cars, change:render, template:car-tmpl"></div>
     <script id="car-tmpl" type="text/html">
-      <div><%= color %> <%= type %></div>
+      <div><%= color %></div>
     </script>
     <div data-bind="data:car:ready, change:toggle">toggle based on car:ready property</div>
 

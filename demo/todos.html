@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ribs TODO</title>
+    <style>
+      #todos {
+        list-style-type: none;
+        margin: 0px;
+        padding: 5px 0px 5px 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="todoForm">
+      <input id="text" type="text" name="text" />
+      <input data-bind="data:todos, click:add, view:todoForm" type="button" name="add" value="add" />
+    </form>
+
+    <ul id="todos" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
+
+    <script id="todo-tmpl" type="text/html">
+      <li><%= text %></li>
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script src="../vendor/underscore.js"></script>
+    <script src="../vendor/backbone.js"></script>
+    <script src="../src/ribs.js"></script>
+    <script src="../src/binding.js"></script>
+    <script src="../src/declaration.js"></script>
+    <script src="../src/handlers/handlers.js"></script>
+    <script src="../src/handlers/checkbox.js"></script>
+    <script src="../src/handlers/radio.js"></script>
+    <script src="../src/handlers/select.js"></script>
+    <script src="../src/handlers/text.js"></script>
+    <script src="../src/handlers/input.js"></script>
+    <script src="../src/scanner.js"></script>
+    <script src="../src/parser.js"></script>
+    <script>
+
+      var TodoForm = Backbone.View.extend({
+        add: function () {
+          this.collection.add({text: this.$('#text').val()});
+          this.$('#text').val('');
+        }
+      });
+
+      var Todos = Backbone.Collection.extend({
+        model: Todo
+      });
+
+      var Todo = Backbone.Model.extend({
+        collection: Todos,
+        initialize: function () {
+          this.text = "";
+        }
+      });
+
+      var todos = new Todos();
+      var todoForm = new TodoForm();
+
+      $(function () {
+        Ribs();
+      });
+
+    </script>
+  </body>
+</html>

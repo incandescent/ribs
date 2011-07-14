@@ -35,6 +35,7 @@
       return d;
     },
 
+    // TODO this should only happen once for all declarations
     _processView: function (d, t, el) {
       d.view = R.getObj(t.view);
       // wire backbone view with data
@@ -45,8 +46,9 @@
         d.view.options.model = d.view.model = d.data;
       }
       // el is not jQuery or Zepto
-      if (!(d.view instanceof $)) {
-        d.view.el = el;
+      if (!(d.view.el instanceof $)) {
+        var v = $('#' + t.view);
+        d.view.el = (v.size()) ? v : el;
       }
     },
 
