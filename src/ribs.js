@@ -13,8 +13,15 @@
 
   // setup Ribs namespace
   if (typeof Ribs == "undefined") {
-    var Ribs = this.Ribs = {},
-        R = Ribs;
+    var Ribs = this.Ribs = function (ctx) {
+      R.ctx = ctx || window;
+      $('[data-bind]').each(function () {
+        R.exec($(this));
+      });
+    };
+
+    // setup shortcut
+    var R = Ribs;
   }
 
   R.version = '0.1';
@@ -45,13 +52,8 @@
     return obj;
   };
 
-  // entry
-  R.bindAll = function (ctx) {
-    R.ctx = ctx || window;
-    $('[data-bind]').each(function () {
-      var el = $(this),
-          dec = R.parser.parse(el.attr('data-bind'), el);
-      dec.bind(el);
-    });
+  R.exec = function (el) {
+    dec = R.parser.parse(el.attr('data-bind'), el);
+    dec.bind(el);
   };
 }());

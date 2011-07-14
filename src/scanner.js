@@ -8,8 +8,9 @@
      *
      * Current declarative format can contain following elements:
      *
-     *   data - backbone model or collection,
+     *   data - backbone model or collection in format data:[collection|model](:attr)
      *   template - template used for rendering
+     *   view - backbone view
      *   bindings - array of pairs: event:handler. All Ribs events are supported. Additionary
      *             custom events can be defined. All handlers should be added to Ribs.Handlers
      *   options - hash of additional options which could be used by handlers
@@ -33,7 +34,6 @@
      *    3. re-render collection on collection change
      *
      * @param {string} expr - represents binding expression
-     * @param {object} ctx - current context/namespace
      * @return {Object} token - declaration object
      */
     scan: function (expr) {

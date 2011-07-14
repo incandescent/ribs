@@ -5,6 +5,7 @@
     /**
     * Converts expression to declaration
     * @param {string} expr - expression
+    * @param {jQuery} el
     */
     parse: function (exp, el) {
       var that = this,

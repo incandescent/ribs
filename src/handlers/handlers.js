@@ -100,7 +100,7 @@
 
     render: function (dec, b) {
       var that = this,
-          html;
+          html, t;
 
       if (!dec.options.template) {
         throw new Error('no template present for element: ' + this);
@@ -109,22 +109,30 @@
       // cache template
       if (typeof dec.options.template == "string") {
         html = $("#" + dec.options.template).html();
+        if (!html) {
+          throw new Error("Template " + dec.options.template + " doesn't exit");
+        }
         dec.options.template = _.template(html);
       }
 
-      var t = dec.options.template;
+      t = dec.options.template;
 
       if (b.data.models) {
         this.html('');
         b.data.each(function (model) {
-          html = t({model: model.attributes});
+          html = t(model.attributes);
           that.append(html);
         });
       }
       else {
-        html = t({model: b.data.attributes});
+        html = t(b.data.attributes);
         that.html(html);
       }
+
+      // take care of nested bindings
+      that.children('[data-bind]').each(function () {
+        R.exec($(this));
+      });
     },
 
     toggle: function (dec, b) {

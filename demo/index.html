@@ -31,7 +31,7 @@
 
     <div data-bind="data:cars, change:render, template:car-tmpl"></div>
     <script id="car-tmpl" type="text/html">
-      <div><%= model.color %> <%= model.type %></div>
+      <div><%= color %> <%= type %></div>
     </script>
     <div data-bind="data:car:ready, change:toggle">toggle based on car:ready property</div>
 
@@ -61,7 +61,7 @@
       cars.add({color: "blue"});
       var car = cars.first();
       $(function () {
-        Ribs.bindAll();
+        Ribs();
         setTimeout(function () {
           car.set(cars.last().attributes);
         }, 1000);

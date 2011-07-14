@@ -26,12 +26,13 @@
       _(this.bindings).each(function (b) {
         var handler = that.execute(el, b);
         if (b.isBackboneEvent()) {
+          that.data.unbind(b.getEventName());
           that.data.bind(b.getEventName(), handler);
           // execute handler initially
           handler();
         }
         else if (b.isDomEvent()) {
-          el.bind(b.getEvent(), handler);
+          el.unbind(b.getEvent()).bind(b.getEvent(), handler);
         }
       });
 

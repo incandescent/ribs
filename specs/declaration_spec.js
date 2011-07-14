@@ -4,7 +4,10 @@ describe("Ribs.Declaration", function () {
     this.addMatchers(eventMatchers);
 
     var Car = Backbone.Model;
+    var self = this;
+    this.counter = 0;
     this.car = new Car();
+    this.car2 = new Car();
 
     var Cars = Backbone.Collection.extend({
       model: Car
@@ -20,6 +23,11 @@ describe("Ribs.Declaration", function () {
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
+
+    this.handler = function () {
+      self.counter++;
+    }
+
     Ribs.ctx = this;
   });
 
@@ -33,10 +41,33 @@ describe("Ribs.Declaration", function () {
     describe("when view is present", function () {
       it("should execute in the context of the view", function () {
         setFixtures('<div id="el" type="text" data-bind="data:car:color, view:view, change:render" />');
-        Ribs.bindAll(this);
-
+        Ribs(this);
         this.car.set({color: "blue"});
         expect($('#el').html()).toBe("render executed");
+      });
+    });
+  });
+
+  describe("Options", function () {
+    describe("when template is present", function () {
+      it("should be rendered inside element", function () {
+        setFixtures('<div id="el" data-bind="data:car, change:render, template:car-tmpl" />' +
+          '<script type="text/html" id="car-tmpl"><%= color %></script>');
+        Ribs(this);
+        expect($('#el').html()).toBe('red');
+        this.car.set({color: 'blue'});
+        expect($('#el').html()).toBe('blue');
+      });
+    });
+
+    describe("when bind expression is present inside template", function () {
+      it("should be turned into biding declaration", function () {
+        setFixtures('<div id="outer" data-bind="data:car, change:render, template:car-tmpl" />' +
+          '<script type="text/html" id="car-tmpl">' +
+            '<div id="inner" data-bind="data:car2, change:handler"><%= color %></div></script>');
+        Ribs(this);
+        this.car2.set({color: 'yellow'});
+        expect(this.counter).toBe(2);
       });
     });
   });
@@ -66,7 +97,7 @@ describe("Ribs.Declaration", function () {
     describe("when model attribute is changed", function () {
       it("should change input text value", function () {
         setFixtures('<input id="text" type="text" data-bind="data:car:color, change:update" />');
-        Ribs.bindAll(this);
+        Ribs(this);
         this.car.set({color: "blue"});
         expect($('#text').val()).toBe("blue");
       });
