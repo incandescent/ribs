@@ -91,5 +91,11 @@ describe("Ribs.parser", function () {
         Ribs.parser.parse($('<div data-bind="data:cars, click:wrongHandler" />'));
       }).toThrow(new Error("Object or function 'wrongHandler' not found."));
     });
+
+    it("should reference data in inner element from outer element", function () {
+      setFixtures('<div id="outer" data-bind="data:cars"><div id="inner" data-bind="all:handler" /></div>');
+      Ribs(this);
+      expect($('#inner').data('declaration').data).toBe(this.cars);
+    });
   });
 });

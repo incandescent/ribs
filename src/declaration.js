@@ -21,9 +21,11 @@
 
       // proccess all bindings
       _(this.bindings).each(function (b) {
+        //console.log(b.event);
         var handler = that.execute(el, b);
         if (b.isBackboneEvent()) {
-          that.data.unbind(b.getEventName());
+          // TODO review unbind
+          that.data.unbind(b.getEventName(), handler);
           that.data.bind(b.getEventName(), handler);
           // execute handler initially
           handler();

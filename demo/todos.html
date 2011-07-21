@@ -3,7 +3,7 @@
   <head>
     <title>Ribs TODO</title>
     <style>
-      #todos {
+      #todoList {
         list-style-type: none;
         margin: 0px;
         padding: 5px 0px 5px 0px;
@@ -11,17 +11,17 @@
     </style>
   </head>
   <body>
+
     <form id="todoForm" data-bind="data:todos, view:todoForm">
       <input id="text" type="text" name="text" />
       <input data-bind="click:add" type="button" name="add" value="add" />
     </form>
-
-    <ul id="todos" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
+    <ul id="todoList" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
+    <div id="status" data-bind="data:todos, all:count, view:statusView"></div>
 
     <script id="todo-tmpl" type="text/html">
       <li data-bind="view:TodoView"><%= text %> <a href="#" data-bind="click:remove">delete</a></li>
     </script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="../vendor/underscore.js"></script>
     <script src="../vendor/backbone.js"></script>
@@ -57,9 +57,18 @@
         }
       });
 
-      TD.TodoView = Backbone.View;
+      TD.StatusView = Backbone.View.extend({
+        count: function () {
+          this.el.text('total: ' + this.collection.size());
+        }
+      });
+
+      TD.TodoView = Backbone.View.extend({
+      });
+
       TD.todos = new TD.Todos();
       TD.todoForm = new TD.TodoFormView();
+      TD.statusView = new TD.StatusView();
 
       $(function () {
         Ribs(TD);
