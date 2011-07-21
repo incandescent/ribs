@@ -13,13 +13,13 @@
   <body>
     <form id="todoForm" data-bind="data:todos, view:todoForm">
       <input id="text" type="text" name="text" />
-      <input data-bind="data:todos, click:add" type="button" name="add" value="add" />
+      <input data-bind="click:add" type="button" name="add" value="add" />
     </form>
 
     <ul id="todos" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
 
     <script id="todo-tmpl" type="text/html">
-      <li data-bind="data:todos, view:TodoView"><%= text %> <a href="#" data-bind="data:todos, click:remove">delete</a></li>
+      <li data-bind="view:TodoView"><%= text %> <a href="#" data-bind="click:remove">delete</a></li>
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
@@ -47,8 +47,11 @@
 
       var TodoFormView = Backbone.View.extend({
         add: function () {
-          this.collection.add({text: this.$('#text').val()});
-          this.$('#text').val('');
+          var input = this.$('#text');
+          if (input.val()) {
+            this.collection.add({text: input.val()});
+            input.val('');
+          }
         }
       });
 

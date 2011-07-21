@@ -97,7 +97,7 @@ describe("Ribs.Declaration", function () {
         });
 
         setFixtures('<input id="text" type="text" data-bind="' + bind + '" />');
-        dec = Ribs.parser.parse($('#text').attr('data-bind'));
+        dec = Ribs.parser.parse($('#text'));
         dec.bind($('#text'));
 
         _(dec.bindings).each(function (binding) {

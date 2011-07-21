@@ -35,22 +35,22 @@ describe("Ribs.parser", function () {
 
   describe("when parsing and creating declaration", function () {
     it("should reference model", function () {
-      var dec = Ribs.parser.parse('data:car');
+      var dec = Ribs.parser.parse($('<div data-bind="data:car" />'));
       expect(dec.data).toBe(this.car);
     });
 
     it("should reference collection", function () {
-      var dec = Ribs.parser.parse('data:cars');
+      var dec = Ribs.parser.parse($('<div data-bind="data:cars" />'));
       expect(dec.data).toBe(this.cars);
     });
 
     it("should reference view", function () {
-      var dec = Ribs.parser.parse('data:cars, view:view');
+      var dec = Ribs.parser.parse($('<div data-bind="data:cars, view:view" />'));
       expect(dec.view).toBe(this.view);
     });
 
     it("should reference model and create one binding", function () {
-      var dec = Ribs.parser.parse('data:car, click:handler');
+      var dec = Ribs.parser.parse($('<div data-bind="data:car, click:handler" />'));
       expect(dec.data).toBe(this.car);
       expect(dec.bindings.length).toBe(1);
       expect(dec.bindings[0].handler).toBe(this.handler);
@@ -58,37 +58,37 @@ describe("Ribs.parser", function () {
     });
 
     it("should reference model and create two bindings", function () {
-      var dec = Ribs.parser.parse('data:car, click:handler, change:update');
+      var dec = Ribs.parser.parse($('<div data-bind="data:car, click:handler, change:update" />'));
       expect(dec.data).toBe(this.car);
       expect(dec.bindings.length).toBe(2);
     });
 
     it("should contain attribute", function () {
-      var dec = Ribs.parser.parse('data:car:color, click:handler, change:update');
+      var dec = Ribs.parser.parse($('<div data-bind="data:car:color, click:handler, change:update" />'));
       expect(dec.attr).toBe('color');
     });
 
     it("should contain template option", function () {
-      var dec = Ribs.parser.parse('data:cars, change:render, template:cars-tmpl');
+      var dec = Ribs.parser.parse($('<div data-bind="data:cars, change:render, template:cars-tmpl" />'));
       expect(dec.options).toBeTruthy();
       expect(dec.options.template).toBe('cars-tmpl');
     });
 
     it("shouldn't contain model", function () {
       expect(function () {
-        Ribs.parser.parse('click:handler');
+        Ribs.parser.parse($('<div data-bind="click:handler" />'));
       }).toThrow(new Error('data attribute is missing'));
     });
 
     it("should throw an exception about wrong format", function () {
       expect(function () {
-        Ribs.parser.parse('data');
+        Ribs.parser.parse($('<div data-bind="data" />'));
       }).toThrow(new Error('Block data has a wrong format.'));
     });
 
     it("should throw an exception about missing handler", function () {
       expect(function () {
-        Ribs.parser.parse('data:cars, click:wrongHandler');
+        Ribs.parser.parse($('<div data-bind="data:cars, click:wrongHandler" />'));
       }).toThrow(new Error("Object or function 'wrongHandler' not found."));
     });
   });

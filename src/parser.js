@@ -1,24 +1,23 @@
+// TODO: refactor
 (function (R) {
 
   R.parser = {
 
     /**
-    * Converts expression to declaration
-    * @param {string} expr - expression
-    * @param {jQuery} el
+    * Converts token to declaration
+    * @param {object} el
     */
-    parse: function (exp, el) {
+    parse: function (el) {
       var that = this,
+          exp = el.attr(R.selector),
           t = R.scanner.scan(exp),
-          d = new R.Declaration();
+          d = new R.Declaration(t);
 
-      if (typeof t.data == "undefined") {
+      this._processData(t, d, el);
+
+      if (typeof d.data == "undefined") {
         throw new Error("data attribute is missing");
       }
-
-      d.data = R.getObj(t.data);
-      d.attr = t.attr;
-      d.options = t.options;
 
       if (t.view) {
         this._processView(d, t, el);
@@ -31,6 +30,7 @@
         b.handler = that._findHandler(b.handler, d, el);
         d.bindings.push(b);
       });
+
       return d;
     },
 
@@ -72,7 +72,6 @@
         handler = d.view[name];
       }
       else if (el) {
-
         // test for views first
         el.parents('[' + R.selector + ']').each(function () {
           var dec = $(this).data('declaration');
@@ -88,6 +87,22 @@
         handler = (R.handlers[name]) ? R.handlers[name] : R.getObj(name);
       }
       return handler;
+    },
+
+    _processData: function (t, d, el) {
+      if (t.data) {
+        d.data = R.getObj(t.data);
+        d.attr = t.attr;
+      }
+      else {
+        el.parents('[' + R.selector + ']').each(function () {
+          var dec = $(this).data('declaration');
+          if (dec.data) {
+            d.attr = dec.attr;
+            return d.data = dec.data;
+          }
+        });
+      }
     }
   }
 })(Ribs);

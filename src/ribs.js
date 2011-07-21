@@ -55,7 +55,7 @@
   };
 
   R.exec = function (el) {
-    var dec = R.parser.parse(el.attr(R.selector), el);
+    var dec = R.parser.parse(el);
     el.data('declaration', dec);
     dec.bind(el);
     dec = null;

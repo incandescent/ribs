@@ -38,7 +38,7 @@
      */
     scan: function (expr) {
       var blocks = expr.split(','),
-          token = {bindings:[], options:{}};
+          token = {bindings:[], options:{}, expr:expr};
 
       for (var i = 0, l = blocks.length; i < l; i++) {
         block = blocks[i].trim().split(':');
