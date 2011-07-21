@@ -37,13 +37,25 @@ describe("Ribs.Declaration", function () {
     this.view = null;
   });
 
-  describe("Handler", function (){
+  describe("Handler", function () {
     describe("when view is present", function () {
       it("should execute in the context of the view", function () {
         setFixtures('<div id="el" type="text" data-bind="data:car:color, view:view, change:render" />');
         Ribs(this);
         this.car.set({color: "blue"});
         expect($('#el').html()).toBe("render executed");
+      });
+    });
+  });
+
+
+  describe("Views", function () {
+    describe("Nested element", function () {
+      it("should reference view from outer element", function () {
+        setFixtures('<div id="outer" data-bind="data:car:color, view:view"><div id="inner" data-bind="data:car, click:remove" /></div>');
+        Ribs(this);
+        var dec = $('#inner').data('declaration');
+        expect(dec.view).toBe(this.view);
       });
     });
   });

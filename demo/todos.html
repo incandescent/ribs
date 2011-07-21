@@ -11,15 +11,15 @@
     </style>
   </head>
   <body>
-    <form id="todoForm">
+    <form id="todoForm" data-bind="data:todos, view:todoForm">
       <input id="text" type="text" name="text" />
-      <input data-bind="data:todos, click:add, view:todoForm" type="button" name="add" value="add" />
+      <input data-bind="data:todos, click:add" type="button" name="add" value="add" />
     </form>
 
     <ul id="todos" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
 
     <script id="todo-tmpl" type="text/html">
-      <li><%= text %></li>
+      <li data-bind="data:todos, view:TodoView"><%= text %> <a href="#" data-bind="data:todos, click:remove">delete</a></li>
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
@@ -37,32 +37,29 @@
     <script src="../src/scanner.js"></script>
     <script src="../src/parser.js"></script>
     <script>
-
-      var TodoForm = Backbone.View.extend({
-        add: function () {
-          this.collection.add({text: this.$('#text').val()});
-          this.$('#text').val('');
-        }
-      });
-
       var Todos = Backbone.Collection.extend({
         model: Todo
       });
 
       var Todo = Backbone.Model.extend({
         collection: Todos,
-        initialize: function () {
-          this.text = "";
+      });
+
+      var TodoFormView = Backbone.View.extend({
+        add: function () {
+          this.collection.add({text: this.$('#text').val()});
+          this.$('#text').val('');
         }
       });
 
+      var TodoView = Backbone.View;
+
       var todos = new Todos();
-      var todoForm = new TodoForm();
+      var todoForm = new TodoFormView();
 
       $(function () {
         Ribs();
       });
-
     </script>
   </body>
 </html>

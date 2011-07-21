@@ -15,7 +15,7 @@
   if (typeof Ribs == "undefined") {
     var Ribs = this.Ribs = function (ctx) {
       R.ctx = ctx || window;
-      $('[data-bind]').each(function () {
+      $('[' + R.selector + ']').each(function () {
         R.exec($(this));
       });
     };
@@ -25,6 +25,8 @@
   }
 
   R.version = '0.1';
+
+  R.selector = "data-bind";
 
   // backbone events
   R.bevents = "add change remove all route error".split(' ');
@@ -53,7 +55,9 @@
   };
 
   R.exec = function (el) {
-    dec = R.parser.parse(el.attr('data-bind'), el);
+    var dec = R.parser.parse(el.attr(R.selector), el);
+    el.data('declaration', dec);
     dec.bind(el);
+    dec = null;
   };
 }());

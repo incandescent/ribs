@@ -100,7 +100,7 @@
 
     render: function (dec, b) {
       var that = this,
-          html, t;
+          html, t, model, attrs;
 
       if (!dec.options.template) {
         throw new Error('no template present for element: ' + this);
@@ -110,7 +110,7 @@
       if (typeof dec.options.template == "string") {
         html = $("#" + dec.options.template).html();
         if (!html) {
-          throw new Error("Template " + dec.options.template + " doesn't exit");
+          throw new Error("Template " + dec.options.template + " doesn't exist");
         }
         dec.options.template = _.template(html);
       }
@@ -118,11 +118,13 @@
       t = dec.options.template;
 
       if (b.data.models) {
-        this.html('');
-        b.data.each(function (model) {
-          html = t(model.attributes);
+        model = b.data.last();
+        if (model) {
+          attrs = model.attributes;
+          attrs =  (attrs.id) ? attrs : _.extend(attrs, {id: (model.id || model.cid)});
+          html = t(attrs);
           that.append(html);
-        });
+        }
       }
       else {
         html = t(b.data.attributes);
@@ -130,7 +132,7 @@
       }
 
       // take care of nested bindings
-      that.children('[data-bind]').each(function () {
+      $(that).find('[data-bind]').each(function () {
         R.exec($(this));
       });
     },
