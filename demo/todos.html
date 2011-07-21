@@ -37,15 +37,17 @@
     <script src="../src/scanner.js"></script>
     <script src="../src/parser.js"></script>
     <script>
-      var Todos = Backbone.Collection.extend({
-        model: Todo
+
+      var TD = {}; // namespace
+      TD.Todos = Backbone.Collection.extend({
+        model: TD.Todo
       });
 
-      var Todo = Backbone.Model.extend({
-        collection: Todos,
+      TD.Todo = Backbone.Model.extend({
+        collection: TD.Todos,
       });
 
-      var TodoFormView = Backbone.View.extend({
+      TD.TodoFormView = Backbone.View.extend({
         add: function () {
           var input = this.$('#text');
           if (input.val()) {
@@ -55,13 +57,12 @@
         }
       });
 
-      var TodoView = Backbone.View;
-
-      var todos = new Todos();
-      var todoForm = new TodoFormView();
+      TD.TodoView = Backbone.View;
+      TD.todos = new TD.Todos();
+      TD.todoForm = new TD.TodoFormView();
 
       $(function () {
-        Ribs();
+        Ribs(TD);
       });
     </script>
   </body>
