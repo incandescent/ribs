@@ -3,9 +3,6 @@
   /**
    * Declaration represents single declarative expression defined
    * on DOM element turned into object
-   * TODO: I'm not very happy with this name
-   * basically this is a collection of bindings
-   * together with addtional options
    */
   R.Declaration = function () {
     this.bindings = [];

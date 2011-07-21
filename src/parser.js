@@ -74,7 +74,7 @@
       else if (el) {
 
         // test for views first
-        el.parents('[data-bind]').each(function () {
+        el.parents('[' + R.selector + ']').each(function () {
           var dec = $(this).data('declaration');
           if (dec.view) {
             d.view = dec.view;
@@ -87,7 +87,6 @@
       if (!handler) {
         handler = (R.handlers[name]) ? R.handlers[name] : R.getObj(name);
       }
-
       return handler;
     }
   }

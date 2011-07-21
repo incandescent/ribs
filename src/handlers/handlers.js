@@ -132,7 +132,7 @@
       }
 
       // take care of nested bindings
-      $(that).find('[data-bind]').each(function () {
+      $(that).find('[' + R.selector + ']').each(function () {
         R.exec($(this));
       });
     },
