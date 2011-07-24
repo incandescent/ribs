@@ -12,7 +12,6 @@
           exp = el.attr(R.selector),
           t = R.scanner.scan(exp),
           d = new R.Declaration(t);
-
       this._processData(t, d, el);
 
       if (typeof d.data == "undefined") {

@@ -11,7 +11,6 @@
     </style>
   </head>
   <body>
-
     <form id="todoForm" data-bind="data:todos, view:todoForm">
       <input id="text" type="text" name="text" />
       <input data-bind="click:add" type="button" name="add" value="add" />
@@ -44,7 +43,7 @@
       });
 
       TD.Todo = Backbone.Model.extend({
-        collection: TD.Todos,
+        collection: TD.Todos
       });
 
       TD.TodoFormView = Backbone.View.extend({
@@ -64,6 +63,10 @@
       });
 
       TD.TodoView = Backbone.View.extend({
+        remove: function () {
+          this.model.destroy();
+          this.el.remove();
+        }
       });
 
       TD.todos = new TD.Todos();

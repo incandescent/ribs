@@ -28,7 +28,7 @@
           that.data.unbind(b.getEventName(), handler);
           that.data.bind(b.getEventName(), handler);
           // execute handler initially
-          handler();
+          //handler();
         }
         else if (b.isDomEvent()) {
           el.unbind(b.getEvent()).bind(b.getEvent(), handler);

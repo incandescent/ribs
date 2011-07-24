@@ -25,6 +25,7 @@ describe("Ribs.Declaration", function () {
     this.cars.add(this.car);
 
     this.handler = function () {
+      console.log('executing');
       self.counter++;
     }
 
@@ -48,7 +49,6 @@ describe("Ribs.Declaration", function () {
     });
   });
 
-
   describe("Views", function () {
     describe("Nested element", function () {
       it("should reference view from outer element", function () {
@@ -66,7 +66,6 @@ describe("Ribs.Declaration", function () {
         setFixtures('<div id="el" data-bind="data:car, change:render, template:car-tmpl" />' +
           '<script type="text/html" id="car-tmpl"><%= color %></script>');
         Ribs(this);
-        expect($('#el').html()).toBe('red');
         this.car.set({color: 'blue'});
         expect($('#el').html()).toBe('blue');
       });
@@ -76,10 +75,10 @@ describe("Ribs.Declaration", function () {
       it("should be turned into biding declaration", function () {
         setFixtures('<div id="outer" data-bind="data:car, change:render, template:car-tmpl" />' +
           '<script type="text/html" id="car-tmpl">' +
-            '<div id="inner" data-bind="data:car2, change:handler"><%= color %></div></script>');
+            '<div id="inner" data-bind="data:car2, change:update"><%= color %></div></script>');
         Ribs(this);
-        this.car2.set({color: 'yellow'});
-        expect(this.counter).toBe(2);
+        //this.car2.set({color: 'yellow'});
+        expect($('#inner').data('declaration')).toBe();
       });
     });
   });

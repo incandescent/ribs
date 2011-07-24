@@ -98,6 +98,7 @@
       }
     },
 
+    // TODO: refactor
     render: function (dec, b) {
       var that = this,
           html, t, model, attrs;
@@ -121,20 +122,31 @@
         model = b.data.last();
         if (model) {
           attrs = model.attributes;
-          attrs =  (attrs.id) ? attrs : _.extend(attrs, {id: (model.id || model.cid)});
           html = t(attrs);
-          that.append(html);
+          html = $(html).appendTo(that);
         }
       }
       else {
         html = t(b.data.attributes);
-        that.html(html);
+        if ($(html).size() > 0) {
+          html = $(html).appendTo(that);
+        }
+        else {
+          that.html(html);
+        }
       }
 
-      // take care of nested bindings
-      $(that).find('[' + R.selector + ']').each(function () {
-        R.exec($(this));
-      });
+      // process nested bindings
+      if ($(html).size() > 0) {
+        // find including self
+        html.find('*').andSelf().filter('[' + R.selector + ']').each(function () {
+          R.exec($(this));
+          var dec = $(this).data('declaration');
+          if (dec.view) {
+            dec.view.model = model;
+          }
+        });
+      }
     },
 
     toggle: function (dec, b) {
