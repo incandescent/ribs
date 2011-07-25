@@ -13,13 +13,13 @@ describe("Ribs.Declaration", function () {
       model: Car
     });
 
-    var View = Backbone.View.extend({
+    this.View = Backbone.View.extend({
       render: function () {
         this.el.html('render executed');
       }
     });
 
-    this.view = new View();
+    this.view = new this.View();
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
@@ -56,6 +56,18 @@ describe("Ribs.Declaration", function () {
         Ribs(this);
         var dec = $('#inner').data('declaration');
         expect(dec.view).toBe(this.view);
+      });
+
+      it("should reference model from collection", function () {
+        setFixtures('<script type="text/html" id="carTmpl"><li data-bind="view:View"><%= color %></li></script>' +
+          '<ul id="list" data-bind="data:cars, add:render, template:carTmpl" />');
+
+        Ribs(this);
+        this.cars.add({color: "blue"});
+        this.cars.add({color: "red"});
+        expect($('#list > li').size()).toBe(2);
+        var dec = $('#list > li:first').data('declaration');
+        expect(dec.view.model).toBe(this.cars.at(1));
       });
     });
   });
