@@ -19,7 +19,10 @@
     <div id="status" data-bind="data:todos, all:count, view:statusView"></div>
 
     <script id="todo-tmpl" type="text/html">
-      <li data-bind="view:TodoView"><%= text %> <a href="#" data-bind="click:remove">delete</a></li>
+      <li data-bind="view:TodoView">
+        <input type="checkbox" data-bind="click:toggleDone" />
+        <%= text %> <a href="#" data-bind="click:remove">delete</a>
+      </li>
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="../vendor/underscore.js"></script>
@@ -36,7 +39,6 @@
     <script src="../src/scanner.js"></script>
     <script src="../src/parser.js"></script>
     <script>
-
       var TD = {}; // namespace
       TD.Todos = Backbone.Collection.extend({
         model: TD.Todo
@@ -66,6 +68,16 @@
         remove: function () {
           this.model.destroy();
           this.el.remove();
+        },
+
+        toggleDone: function () {
+          this.model.set({done: !this.model.get('done')});
+          if (this.model.get('done')) {
+            this.el.css({'text-decoration': 'line-through'});
+          }
+          else {
+            this.el.css({'text-decoration': 'none'});
+          }
         }
       });
 

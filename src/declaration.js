@@ -31,7 +31,7 @@
           //handler();
         }
         else if (b.isDomEvent()) {
-          el.unbind(b.getEvent()).bind(b.getEvent(), handler);
+          el.unbind(b.getEvent(), handler).bind(b.getEvent(), handler);
         }
       });
 
