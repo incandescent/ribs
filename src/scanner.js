@@ -8,28 +8,28 @@
      *
      * Current declarative format can contain following elements:
      *
-     *   data - backbone model or collection in format data:[collection|model](:attr)
-     *   template - template used for rendering
-     *   view - backbone view
-     *   bindings - array of pairs: event:handler. All Ribs events are supported. Additionary
-     *             custom events can be defined. All handlers should be added to Ribs.Handlers
-     *   options - hash of additional options which could be used by handlers
+     *    * `data`     - backbone model or collection in format *`data:[collection|model](:attr)`*
+     *    * `template` - template used for rendering
+     *    * `view`     - backbone view
+     *    * `bindings` - array of pairs: `event:handler`. All Ribs events are supported. Additionary
+     *                   custom events can be defined. All handlers should be added to Ribs.Handlers
+     *    * `options`  - hash of additional options which could be used by handlers
      *
      * Examples of declarative attributes which become bindings:
      *
-     *    data:car:color, change:set
+     * `data:car:color, change:set`
      *
      * which translates into:
      *
-     *    1. bind to car model,
-     *    2. set value of current element to model.color attribute during initialization
-     *    3. set value of current element to model.color attribute on every change
+     *    1. bind to `car` model,
+     *    2. set value of current element to `model.color` attribute during initialization
+     *    3. set value of current element to `model.color` attribute on every change
      *
-     *    data:cars, init:render, all:render, template:car-tmpl
+     * `data:cars, init:render, all:render, template:car-tmpl`
      *
      * which translates into:
      *
-     *    1. bind to collection cars,
+     *    1. bind to collection `cars`,
      *    2. render all collection items on initialization
      *    3. re-render collection on collection change
      *
@@ -49,7 +49,10 @@
     },
 
     /**
-     * Scans single block.
+     * Scans single block and updates the parsed structure.
+     * If the parameter is an event, adds a new `Binding`. 
+     * If the parameter is not recognized it is added to the `options`
+     * object.
      *
      * @param {array} block
      * @param {Object} token

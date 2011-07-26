@@ -19,10 +19,12 @@
     bind: function (el) {
       var that = this;
 
-      // proccess all bindings
+      // process all bindings
       _(this.bindings).each(function (b) {
         //console.log(b.event);
         var handler = that.execute(el, b);
+        
+        // If the binding represents a Backbone event bind to the Backbone model
         if (b.isBackboneEvent()) {
           // TODO review unbind
           that.data.unbind(b.getEventName(), handler);
@@ -30,6 +32,7 @@
           // execute handler initially
           //handler();
         }
+        // Otherwise if it is a DOM event, bind to the element on which it declared
         else if (b.isDomEvent()) {
           el.unbind(b.getEvent(), handler).bind(b.getEvent(), handler);
         }
