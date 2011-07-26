@@ -1,6 +1,12 @@
 (function (R) {
 
- /**
+  // A Binding object represents the association between an event and a handler which will
+  // be run when the event is fired.  
+  //
+  // Both DOM and Backbone events may be bound (see `Ribs.devents` and `Ribs.bevents`).
+  // Backbone events support a second "attribute" component representing the model field.
+
+  /**
    * Binding constructor
    * @param {string} event
    * @param {function} handler
