@@ -4,7 +4,8 @@
    * Declaration represents single declarative expression defined
    * on DOM element turned into object
    */
-  R.Declaration = function (token) {
+  R.Declaration = function (ribs, token) {
+    this.ribs = ribs;
     this.bindings = [];
     this.options = token.options;
   };

@@ -51,6 +51,7 @@
   R.handlers = {
     // init hook
     init: function (dec) {
+      this.dec = dec;
       var type = this.getType();
       R[type].init.call(this, dec);
     },
@@ -79,7 +80,7 @@
       }
 
       if (typeof dec.options.current == "string") {
-        dec.options.current = R.getObj(dec.options.current);
+        dec.options.current = dec.ribs.getObj(dec.options.current);
       }
 
       var model = R[type].getCurrent.call(this);
@@ -139,8 +140,8 @@
       // process nested bindings
       if ($(html).size() > 0) {
         // find including self
-        html.find('*').andSelf().filter('[' + R.selector + ']').each(function () {
-          R.exec($(this));
+        html.find('*').andSelf().filter('[' + this.dec.ribs.selector + ']').each(function () {
+          that.dec.ribs.bind($(this));
           // necessary or will parser automatically find and assign a parent data model?
           var dec = $(this).data('declaration');
           if (dec.view) {

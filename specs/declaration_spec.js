@@ -29,7 +29,7 @@ describe("Ribs.Declaration", function () {
       self.counter++;
     }
 
-    Ribs.ctx = this;
+    this.ribs = new Ribs(this);
   });
 
   afterEach(function () {
@@ -108,7 +108,7 @@ describe("Ribs.Declaration", function () {
         });
 
         setFixtures('<input id="text" type="text" data-bind="' + bind + '" />');
-        dec = Ribs.parser.parse($('#text'));
+        dec = Ribs.parser.parse(this.ribs, $('#text'));
         dec.bind($('#text'));
 
         _(dec.bindings).each(function (binding) {

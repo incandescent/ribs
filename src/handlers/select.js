@@ -16,7 +16,7 @@
           v, s;
 
       if (c) {
-        c = R.getObj(c);
+        c = this.dec.ribs.getObj(c);
       }
           
       if (data.models) {

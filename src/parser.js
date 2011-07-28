@@ -7,26 +7,26 @@
     * Converts token to declaration
     * @param {object} el
     */
-    parse: function (el) {
+    parse: function (ribs, el) {
       var that = this,
-          exp = el.attr(R.selector),
+          exp = el.attr(ribs.selector),
           t = R.scanner.scan(exp),
-          d = new R.Declaration(t);
-      this._processData(t, d, el);
+          d = new R.Declaration(ribs, t);
+      this._processData(ribs, t, d, el);
 
       if (typeof d.data == "undefined") {
         throw new Error("data attribute is missing");
       }
 
       if (t.view) {
-        this._processView(d, t, el);
+        this._processView(ribs, d, t, el);
       }
 
       // process bindings
       _(t.bindings).each(function (b, i) {
         b.data = d.data;
         b.attr = d.attr;
-        b.handler = that._findHandler(b.handler, d, el);
+        b.handler = that._findHandler(ribs, b.handler, d, el);
         d.bindings.push(b);
       });
 
@@ -34,8 +34,8 @@
     },
 
     // TODO this should only happen once for all declarations
-    _processView: function (d, t, el) {
-      d.view = R.getObj(t.view);
+    _processView: function (ribs, d, t, el) {
+      d.view = ribs.getObj(t.view);
 
       // create new view
       if (typeof d.view == "function") {
@@ -64,7 +64,7 @@
     * @param {string} handler - handler's name
     *
     */
-    _findHandler: function (name, d, el) {
+    _findHandler: function (ribs, name, d, el) {
       var handler;
 
       if (d.view) {
@@ -72,7 +72,7 @@
       }
       else if (el) {
         // test for views first
-        el.parents('[' + R.selector + ']').each(function () {
+        el.parents('[' + ribs.selector + ']').each(function () {
           var dec = $(this).data('declaration');
           if (dec.view) {
             d.view = dec.view;
@@ -83,18 +83,18 @@
       }
 
       if (!handler) {
-        handler = (R.handlers[name]) ? R.handlers[name] : R.getObj(name);
+        handler = (R.handlers[name]) ? R.handlers[name] : ribs.getObj(name);
       }
       return handler;
     },
 
-    _processData: function (t, d, el) {
+    _processData: function (ribs, t, d, el) {
       if (t.data) {
-        d.data = R.getObj(t.data);
+        d.data = ribs.getObj(t.data);
         d.attr = t.attr;
       }
       else {
-        el.parents('[' + R.selector + ']').each(function () {
+        el.parents('[' + ribs.selector + ']').each(function () {
           var dec = $(this).data('declaration');
           if (dec.data) {
             d.attr = dec.attr;
