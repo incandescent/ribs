@@ -52,9 +52,11 @@
     execute: function (el, binding) {
       var that = this;
       return function () {
+        // if the declaration specified a view, then call the handler in the context of the view
         if (that.view) {
           binding.handler.call(that.view);
         }
+        // otherwise call the handler in the context of the declaration element
         else {
           binding.handler.call(el, that, binding);
         }

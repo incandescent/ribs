@@ -141,6 +141,7 @@
         // find including self
         html.find('*').andSelf().filter('[' + R.selector + ']').each(function () {
           R.exec($(this));
+          // necessary or will parser automatically find and assign a parent data model?
           var dec = $(this).data('declaration');
           if (dec.view) {
             dec.view.model = model;
