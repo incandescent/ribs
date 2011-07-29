@@ -22,11 +22,11 @@
         this.attr = config.attr;
       }
       else {
-        this.el.parents('[' + ribs.selector + ']').each(function () {
-          var dec = $(this).data('declaration');
-          if (dec.data) {
-            self.attr = dec.attr;
-            self.data = dec.data;
+        // if the config did not provide a model, find ancestor model
+        this.ribs.declarations(this.el.parents(), function (ancestor_dec) {
+          if (ancestor_dec.data) {
+            self.attr = ancestor_dec.attr;
+            self.data = ancestor_dec.data;
             return false; // stop iteration
           }
         });
