@@ -20,8 +20,7 @@
 
       // Registers bindings defined on the element
       this.bind = function (el) {
-        // don't need to save the declaration once it's been wired
-        new R.Declaration(this, el, R.scanner.scan(el.attr(this.selector)));
+        return new R.Declaration(this, el, R.scanner.scan(el.attr(this.selector)));
       };
 
       /**

@@ -32,7 +32,7 @@
         });
       }
 
-      if (typeof this.data == "undefined") {
+      if (typeof this.data == "undefined" || this.data == null) {
         throw new Error("data attribute is missing");
       }
 

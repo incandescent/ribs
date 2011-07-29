@@ -11,9 +11,9 @@
    * @param {string} event
    * @param {function} handler
    */
-  R.Binding = function (event, handlerName, attr) {
+  R.Binding = function (event, handler, attr) {
     this.event = event;
-    this.handlerName = handlerName;
+    this.handler = handler;
     this.eventName = event.replace(/^on/, '');
     this.attr = attr;
   };
@@ -43,13 +43,17 @@
       this.data = dec.data;
       this.attr = dec.attr;
       
+      var handler = null;
+      
       if (dec.view) {
-        this.handler = dec.view[this.handlerName];
+        handler = dec.view[this.handler];
       }
       
-      if (!this.handler) {
-        this.handler = (R.handlers[this.handlerName]) ? R.handlers[this.handlerName] : dec.ribs.getObj(this.handlerName);
+      if (!handler) {
+        handler = (R.handlers[this.handler]) ? R.handlers[this.handler] : dec.ribs.getObj(this.handler);
       }
+      
+      this.handler = handler;
       
       var self = this;
       
