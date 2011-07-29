@@ -29,11 +29,7 @@
 
   // 'interface' for elements
   R.El = function (props) {
-    for (var attr in props) {
-      if (props.hasOwnProperty(attr)) {
-        this[attr] = props[attr];
-      }
-    }
+    _.extend(this, props);
   };
 
   R.El.prototype = {
