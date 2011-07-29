@@ -11,9 +11,9 @@
    * @param {string} event
    * @param {function} handler
    */
-  R.Binding = function (event, handler, attr) {
+  R.Binding = function (event, handlerName, attr) {
     this.event = event;
-    this.handler = handler;
+    this.handlerName = handlerName;
     this.eventName = event.replace(/^on/, '');
     this.attr = attr;
   };
@@ -36,6 +36,46 @@
     },
     setAttr: function (attr) {
       this.attr = attr;
+    },
+    // resolve this binding name in the context of a declaration
+    // assigns the data attribute and wires a wrapping function that invokes the view correctly
+    resolve: function(dec) {
+      this.data = dec.data;
+      this.attr = dec.attr;
+      
+      if (dec.view) {
+        this.handler = dec.view[this.handlerName];
+      }
+      
+      if (!this.handler) {
+        this.handler = (R.handlers[this.handlerName]) ? R.handlers[this.handlerName] : dec.ribs.getObj(this.handlerName);
+      }
+      
+      var self = this;
+      
+      var func = function () {
+        // if the declaration specified a view, then call the handler in the context of the view
+        if (dec.view) {
+          self.handler.call(dec.view);
+        }
+        // otherwise call the handler in the context of the declaration element
+        else {
+          self.handler.call(dec.el, dec, self);
+        }
+      };
+    
+      // If the binding represents a Backbone event bind to the Backbone model
+      if (this.isBackboneEvent()) {
+        // TODO review unbind
+        this.data.unbind(this.getEventName(), func);
+        this.data.bind(this.getEventName(), func);
+        // execute handler initially
+        //func();
+      }
+      // Otherwise if it is a DOM event, bind to the element on which it declared
+      else if (this.isDomEvent()) {
+        dec.el.unbind(this.getEvent(), func).bind(this.getEvent(), func);
+      }
     }
   };
 })(Ribs);

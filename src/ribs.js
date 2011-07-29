@@ -20,12 +20,10 @@
 
       // Registers bindings defined on the element
       this.bind = function (el) {
-        var dec = R.parser.parse(this, el);
-        el.data('declaration', dec);
-        dec.bind(el);
-        dec = null;
+        // don't need to save the declaration once it's been wired
+        new R.Declaration(this, el, R.scanner.scan(el.attr(this.selector)));
       };
-      
+
       /**
        * Returns object for given name.
        *
@@ -46,14 +44,9 @@
       };
       
       // Initializes Ribs by discovering and binding all annotated elements
-      var init = function () {
-        $('[' + this.selector + ']').each(function () {
-            self.bind($(this));
-        });
-      };
-      
-      // Initialize on construction
-      init();
+      $('[' + this.selector + ']').each(function () {
+        bind($(this));
+      });
     };
   }
   
