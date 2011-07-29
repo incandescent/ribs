@@ -42,20 +42,36 @@
         return obj;
       };
       
-      // binds all declarations in an element subtree
-      // if tree is given, it is filtered as a jQuery/Zepto result set; otherwise the entire document is scanned
-      // if callback is given then it is called with each declaration object
-      this.bind_tree = function(tree, callback) {
-        var nodes = null;
+      // selects nodes with the data binding selector
+      this.annotated_nodes = function(tree, callback) {
+          var nodes = null;
         if (tree) {
             nodes = tree.filter('[' + this.selector + ']');
         } else {
             nodes = $('[' + this.selector + ']');
         }
         nodes.each(function () {
-          var dec = self.bind($(this));
           if (callback) {
-            callback(dec);
+            return callback($(this));
+          }
+        });
+      };
+      
+      // invokes callback for each declaration in the element tree
+      this.declarations = function(tree, callback) {
+        this.annotated_nodes(tree, function(node) {
+          return callback(node.data('declaration'));
+        });
+      };
+      
+      // binds all declarations in an element subtree
+      // if tree is given, it is filtered as a jQuery/Zepto result set; otherwise the entire document is scanned
+      // if callback is given then it is called with each declaration object
+      this.bind_tree = function(tree, callback) {
+        this.annotated_nodes(tree, function(node) {
+          var dec = self.bind(node);
+          if (callback) {
+            return callback(dec);
           }
         });
       };

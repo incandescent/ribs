@@ -78,8 +78,7 @@
         this.init_view(config.view);
       } else {
         // if the config did not provide a view name find ancestor view
-        this.el.parents('[' + this.ribs.selector + ']').each(function () {
-          var ancestor_dec = $(this).data('declaration');
+        this.ribs.declarations(this.el.parents(), function (ancestor_dec) {
           if (ancestor_dec.view) {
             self.view = ancestor_dec.view;
             return false; // stop iteration
