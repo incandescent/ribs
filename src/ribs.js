@@ -14,14 +14,21 @@
   // setup Ribs namespace
   if (typeof Ribs == "undefined") {
     this.R = this.Ribs = function (ctx, selector) {
-      var self = this;
+      if (!(this instanceof Ribs)) // support construction w/o new
+        return new Ribs(ctx, selector);
+
       this.ctx = ctx || window;
       this.selector = selector || R.selector;
+      // Initializes Ribs by discovering and binding all annotated elements
+      this.bind_tree();
+    };
+    
+    _.extend(this.Ribs.prototype, {
 
       // Registers bindings defined on the element
-      this.bind = function (el) {
+      bind: function (el) {
         return new R.Declaration(this, el, R.scanner.scan(el.attr(this.selector)));
-      };
+      },
 
       /**
        * Returns object for given name.
@@ -29,8 +36,8 @@
        * @param name {String} String representation of the object.
        * @return object
        */
-      this.getObj = function (name) {
-        var obj = self.ctx;
+      getObj: function (name) {
+        var obj = this.ctx;
         _(name.split('.')).each(function (prop) {
           if (obj.hasOwnProperty(prop)) {
             obj = obj[prop];
@@ -40,10 +47,10 @@
           }
         });
         return obj;
-      };
+      },
       
       // selects nodes with the data binding selector
-      this.annotated_nodes = function(tree, callback) {
+      annotated_nodes: function(tree, callback) {
           var nodes = null;
         if (tree) {
             nodes = tree.filter('[' + this.selector + ']');
@@ -55,30 +62,28 @@
             return callback($(this));
           }
         });
-      };
+      },
       
       // invokes callback for each declaration in the element tree
-      this.declarations = function(tree, callback) {
+      declarations: function(tree, callback) {
         this.annotated_nodes(tree, function(node) {
           return callback(node.data('declaration'));
         });
-      };
+      },
       
       // binds all declarations in an element subtree
       // if tree is given, it is filtered as a jQuery/Zepto result set; otherwise the entire document is scanned
       // if callback is given then it is called with each declaration object
-      this.bind_tree = function(tree, callback) {
+      bind_tree: function(tree, callback) {
+        var self = this;
         this.annotated_nodes(tree, function(node) {
           var dec = self.bind(node);
           if (callback) {
             return callback(dec);
           }
         });
-      };
-      
-      // Initializes Ribs by discovering and binding all annotated elements
-      this.bind_tree();
-    };
+      }
+    });
   }
   
   // Globals
