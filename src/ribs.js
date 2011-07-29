@@ -42,10 +42,26 @@
         return obj;
       };
       
+      // binds all declarations in an element subtree
+      // if tree is given, it is filtered as a jQuery/Zepto result set; otherwise the entire document is scanned
+      // if callback is given then it is called with each declaration object
+      this.bind_tree = function(tree, callback) {
+        var nodes = null;
+        if (tree) {
+            nodes = tree.filter('[' + this.selector + ']');
+        } else {
+            nodes = $('[' + this.selector + ']');
+        }
+        nodes.each(function () {
+          var dec = self.bind($(this));
+          if (callback) {
+            callback(dec);
+          }
+        });
+      };
+      
       // Initializes Ribs by discovering and binding all annotated elements
-      $('[' + this.selector + ']').each(function () {
-        bind($(this));
-      });
+      this.bind_tree();
     };
   }
   
