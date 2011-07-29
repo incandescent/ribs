@@ -107,6 +107,26 @@
         binding.resolve(self);
         self.bindings.push(binding);
       });
+    },
+    
+    // retrieves the template on this declaration, or throws error if none is defined
+    getTemplate: function() {
+      var html = null;
+
+      if (!this.options.template) {
+        throw new Error('no template present for element: ' + this);
+      }
+
+      // cache template
+      if (typeof this.options.template == "string") {
+        html = $("#" + this.options.template).html();
+        if (!html) {
+          throw new Error("Template " + this.options.template + " doesn't exist");
+        }
+        this.options.template = _.template(html);
+      }
+
+      return this.options.template;
     }
   });
 })(Ribs);

@@ -100,20 +100,7 @@
       var that = this,
           html, t, model, attrs;
 
-      if (!dec.options.template) {
-        throw new Error('no template present for element: ' + this);
-      }
-
-      // cache template
-      if (typeof dec.options.template == "string") {
-        html = $("#" + dec.options.template).html();
-        if (!html) {
-          throw new Error("Template " + dec.options.template + " doesn't exist");
-        }
-        dec.options.template = _.template(html);
-      }
-
-      t = dec.options.template;
+      t = dec.getTemplate();
 
       if (b.data.models) {
         model = b.data.last();
