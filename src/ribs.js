@@ -1,5 +1,5 @@
 //  Ribs.js 0.1.0
-//  (c) 2011 Michal Kuklis, Incandescent Software.
+//  (c) 2011 Michal Kuklis, Aaron Hamid, Incandescent Software.
 //  Ribs may be freely distributed under the MIT license.
 
 (function () {
@@ -20,9 +20,9 @@
       this.ctx = ctx || window;
       this.selector = selector || R.selector;
       // Initializes Ribs by discovering and binding all annotated elements
-      this.bind_tree();
+      this.bindTree();
     };
-    
+
     _.extend(this.Ribs.prototype, {
 
       // Registers bindings defined on the element
@@ -48,9 +48,9 @@
         });
         return obj;
       },
-      
+
       // selects nodes with the data binding selector
-      annotated_nodes: function(tree, callback) {
+      annotatedNodes: function (tree, callback) {
           var nodes = null;
         if (tree) {
             nodes = tree.filter('[' + this.selector + ']');
@@ -63,20 +63,20 @@
           }
         });
       },
-      
+
       // invokes callback for each declaration in the element tree
-      declarations: function(tree, callback) {
-        this.annotated_nodes(tree, function(node) {
+      declarations: function (tree, callback) {
+        this.annotatedNodes(tree, function(node) {
           return callback(node.data('declaration'));
         });
       },
-      
+
       // binds all declarations in an element subtree
       // if tree is given, it is filtered as a jQuery/Zepto result set; otherwise the entire document is scanned
       // if callback is given then it is called with each declaration object
-      bind_tree: function(tree, callback) {
+      bindTree: function (tree, callback) {
         var self = this;
-        this.annotated_nodes(tree, function(node) {
+        this.annotatedNodes(tree, function (node) {
           var dec = self.bind(node);
           if (callback) {
             return callback(dec);
@@ -85,9 +85,9 @@
       }
     });
   }
-  
+
   // Globals
-  
+
   // Ribs version
   R.version = '0.1';
 

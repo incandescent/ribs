@@ -1,7 +1,7 @@
 (function (R) {
 
   // A Binding object represents the association between an event and a handler which will
-  // be run when the event is fired.  
+  // be run when the event is fired.
   //
   // Both DOM and Backbone events may be bound (see `Ribs.devents` and `Ribs.bevents`).
   // Backbone events support a second "attribute" component representing the model field.
@@ -39,24 +39,24 @@
     },
     // resolve this binding name in the context of a declaration
     // assigns the data attribute and wires a wrapping function that invokes the view correctly
-    resolve: function(dec) {
+    resolve: function (dec) {
       this.data = dec.data;
       this.attr = dec.attr;
-      
+
       var handler = null;
-      
+
       if (dec.view) {
         handler = dec.view[this.handler];
       }
-      
+
       if (!handler) {
         handler = (R.handlers[this.handler]) ? R.handlers[this.handler] : dec.ribs.getObj(this.handler);
       }
-      
+
       this.handler = handler;
-      
+
       var self = this;
-      
+
       var func = function () {
         // if the declaration specified a view, then call the handler in the context of the view
         if (dec.view) {
@@ -67,7 +67,7 @@
           self.handler.call(dec.el, dec, self);
         }
       };
-    
+
       // If the binding represents a Backbone event bind to the Backbone model
       if (this.isBackboneEvent()) {
         // TODO review unbind

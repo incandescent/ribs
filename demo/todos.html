@@ -8,6 +8,10 @@
         margin: 0px;
         padding: 5px 0px 5px 0px;
       }
+
+      .done {
+        text-decoration: line-through;
+      }
     </style>
   </head>
   <body>
@@ -16,7 +20,11 @@
       <input data-bind="click:add" type="button" name="add" value="add" />
     </form>
     <ul id="todoList" data-bind="data:todos, add:render, template:todo-tmpl"></ul>
-    <div id="status" data-bind="data:todos, all:count, view:statusView"></div>
+
+    <div id="status" data-bind="data:todos, all:todo, view:statusView">
+      <div id="todo"></div>
+      <div id="done"></div>
+    </div>
 
     <script id="todo-tmpl" type="text/html">
       <li data-bind="view:TodoView">
@@ -37,30 +45,39 @@
     <script src="../src/handlers/text.js"></script>
     <script src="../src/handlers/input.js"></script>
     <script src="../src/scanner.js"></script>
-    <script src="../src/parser.js"></script>
     <script>
       var TD = {}; // namespace
-      TD.Todos = Backbone.Collection.extend({
-        model: TD.Todo
-      });
 
       TD.Todo = Backbone.Model.extend({
-        collection: TD.Todos
+        toggle: function () {
+          this.set({done: !this.get("done")});
+        }
       });
 
+      TD.Todos = Backbone.Collection.extend({
+        done: function() {
+          return this.filter(function(todo){
+            return (todo.get('done'));
+          });
+        }
+      });
       TD.TodoFormView = Backbone.View.extend({
         add: function () {
           var input = this.$('#text');
           if (input.val()) {
-            this.collection.add({text: input.val()});
+            var todo = new TD.Todo({text: input.val()});
+            this.collection.add(todo);
             input.val('');
           }
         }
       });
 
       TD.StatusView = Backbone.View.extend({
-        count: function () {
-          this.el.text('total: ' + this.collection.size());
+        todo: function () {
+          var d = this.collection.done().length,
+              td = this.collection.size() - d;
+          this.$('#done').text(d + " item" + ((d == 1) ? "" : "s") + " done");
+          this.$("#todo").text(td + " item" + ((td == 1) ? "" : "s") + " todo");
         }
       });
 
@@ -71,13 +88,8 @@
         },
 
         toggleDone: function () {
-          this.model.set({done: !this.model.get('done')});
-          if (this.model.get('done')) {
-            this.el.css({'text-decoration': 'line-through'});
-          }
-          else {
-            this.el.css({'text-decoration': 'none'});
-          }
+          this.model.toggle();
+          this.el.toggleClass('done');
         }
       });
 
