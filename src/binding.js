@@ -40,35 +40,34 @@
     // resolve this binding name in the context of a declaration
     // assigns the data attribute and wires a wrapping function that invokes the view correctly
     resolve: function (dec) {
-      this.data = dec.data;
-      this.attr = dec.attr;
+      var self = this,
+          handler = null,
+          func = function () {
+            // if the declaration specified a view, then call the handler in the context of the view
+            if (dec.view) {
+              self.handler.call(dec.view);
+            }
+            // otherwise call the handler in the context of the declaration element
+            else {
+              self.handler.call(dec.el, dec, self);
+            }
+          };
 
-      var handler = null;
-
+      // look for handler on the given view
       if (dec.view) {
         handler = dec.view[this.handler];
       }
 
+      // look for handler in global handlers
       if (!handler) {
         handler = (R.handlers[this.handler]) ? R.handlers[this.handler] : dec.ribs.getObj(this.handler);
       }
 
       this.handler = handler;
+      this.data = dec.data;
+      this.attr = dec.attr;
 
-      var self = this;
-
-      var func = function () {
-        // if the declaration specified a view, then call the handler in the context of the view
-        if (dec.view) {
-          self.handler.call(dec.view);
-        }
-        // otherwise call the handler in the context of the declaration element
-        else {
-          self.handler.call(dec.el, dec, self);
-        }
-      };
-
-      // If the binding represents a Backbone event bind to the Backbone model
+     // If the binding represents a Backbone event bind to the Backbone model
       if (this.isBackboneEvent()) {
         // TODO review unbind
         this.data.unbind(this.getEventName(), func);

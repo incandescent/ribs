@@ -51,12 +51,14 @@
 
       // selects nodes with the data binding selector
       annotatedNodes: function (tree, callback) {
-          var nodes = null;
+        var nodes = null;
+
         if (tree) {
-            nodes = tree.filter('[' + this.selector + ']');
+          nodes = tree.filter('[' + this.selector + ']');
         } else {
-            nodes = $('[' + this.selector + ']');
+          nodes = $('[' + this.selector + ']');
         }
+
         nodes.each(function () {
           if (callback) {
             return callback($(this));
