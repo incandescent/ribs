@@ -85,7 +85,13 @@
       // if the config specifies a view name, look it up in the Ribs context
       if (config.view) {
         this._initView(config.view);
-      } else {
+      }
+      // TODO: what about observable with a predefined view?
+      // should viewmodel be a mixin attached to the view?
+      else if(config.observable) {
+        self.view = R.ViewModel.factory(this.el);
+      }
+      else {
         var self = this;
         // if the config did not provide a view name find ancestor view
         this.ribs.declarations(this.el.parents(), function (ancestorDec) {
