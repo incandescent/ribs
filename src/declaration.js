@@ -19,7 +19,7 @@
 
     // initialize widget on declaration element
     // keep in declaration for now?
-    R.handlers.init.call(this.el, this);
+    // R.handlers.init.call(this.el, this);
   };
 
   _.extend(R.Declaration.prototype, {
@@ -49,51 +49,16 @@
       this.el.data('declaration', this);
     },
 
-    // creates a new view for this declaration, given a view name
-    _initView: function (viewName) {
-      var view = this.ribs.getObj(viewName);
-
-      if (typeof view == "undefined") {
-        throw new Error("could not resolve view");
-      }
-
-      // create new view and set its element
-      if (typeof view == "function") {
-        view = new view
-        view.el = this.el;
-      }
-
-      // wire backbone view with data
-      if (this.data.models) {
-        view.options.collection = view.collection = this.data;
-      } else {
-        view.options.model = view.model = this.data;
-      }
-
-      // if the element object is not a jQuery or Zepto object
-      // attempt to wrap it
-      if (!(view.el instanceof $)) {
-        var v = $('#' + viewName);
-        view.el = (v.size()) ? v : this.el;
-      }
-
-      this.view = view;
-    },
-
     // resolves the view for this declaration, consulting ancestors if no view name is provided
     _resolveView: function (config) {
+      var self = this;
+
       // if the config specifies a view name, look it up in the Ribs context
-      if (config.view) {
-        this._initView(config.view);
-      }
-      // TODO: what about observable with a predefined view?
-      // should viewmodel be a mixin attached to the view?
-      else if(config.observable) {
-        self.view = R.ViewModel.factory(this.el);
+      if (config.view || config.observable) {
+        this.view = R.View.factory(this, config);
       }
       else {
-        var self = this;
-        // if the config did not provide a view name find ancestor view
+       // if the config did not provide a view name find ancestor view
         this.ribs.declarations(this.el.parents(), function (ancestorDec) {
           if (ancestorDec.view) {
             self.view = ancestorDec.view;
