@@ -14,8 +14,5 @@ var eventMatchers = {
     }
     this.actual = $('<div />').append(this.actual.clone()).html();
     return false;
-  },
-
-  toHaveBinding: function () {
   }
 };

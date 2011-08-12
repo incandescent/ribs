@@ -11,7 +11,8 @@
   <script type="text/javascript" src="lib/jasmine.js"></script>
   <script type="text/javascript" src="lib/jasmine-html.js"></script>
   <script type="text/javascript" src="lib/jasmine-jquery.js"></script>
-  <script type="text/javascript" src="lib/jasmine-event-matchers.js"></script>
+  <script type="text/javascript" src="matchers/event-matchers.js"></script>
+  <script type="text/javascript" src="matchers/instanceof-matcher.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
   <script src="../vendor/underscore.js"></script>
   <script src="../vendor/backbone.js"></script>
@@ -20,15 +21,19 @@
   <script type="text/javascript" src="../src/declaration.js"></script>
   <script type="text/javascript" src="../src/scanner.js"></script>
   <script type="text/javascript" src="../src/views/view.js"></script>
+
   <script type="text/javascript" src="../src/views/checkbox_view.js"></script>
   <script type="text/javascript" src="../src/views/radio_view.js"></script>
   <script type="text/javascript" src="../src/views/text_view.js"></script>
   <script type="text/javascript" src="../src/views/input_view.js"></script>
   <script type="text/javascript" src="../src/views/select_view.js"></script>
+
   <script type="text/javascript" src="../src/handlers/handlers.js"></script>
   <script type="text/javascript" src="scanner_spec.js"></script>
   <script type="text/javascript" src="binding_spec.js"></script>
   <script type="text/javascript" src="declaration_spec.js"></script>
+  <script type="text/javascript" src="views/view_spec.js"></script>
+
   <script type="text/javascript">
     (function() {
       var jasmineEnv = jasmine.getEnv();
