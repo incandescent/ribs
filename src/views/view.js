@@ -45,9 +45,6 @@
     if (config.view) {
       view = (R[config.view]) ? R[config.view] : dec.ribs.getObj(config.view);
     }
-    else if (config.observable) {
-      view = R[dec.el.getType() + 'View'];
-    }
 
     if (typeof view == "undefined") {
       throw new Error("could not resolve view");
