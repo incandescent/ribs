@@ -1,5 +1,6 @@
 (function (R) {
 
+  // TODO this should go away completelly
   // proxy for handlers
   R.handlers = {
     // init hook
