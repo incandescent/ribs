@@ -1,32 +1,5 @@
 (function (R) {
 
-  // returns element's tag name
-  $.fn.tagName = function () {
-    return this.get(0).tagName.toLowerCase();
-  };
-
-  // returns one of the types:
-  // [checkbox, radio, select, input, text]
-  // for given DOM element
-  $.fn.getType = function () {
-    var formTags = ["input", "textarea", "select"];
-    if (_.include(formTags, this.tagName())) {
-      if (this.is(':checkbox')) {
-        return "Checkbox";
-      }
-      if (this.is(':radio')) {
-        return "Radio";
-      }
-      if (this.tagName() === 'select') {
-        return "Select";
-      }
-      return "Input";
-    }
-    else {
-      return "Text";
-    }
-  };
-
   R.utils = {
     // a convinient method which creates
     // object with predefined key/value

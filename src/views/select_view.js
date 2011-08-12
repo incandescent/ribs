@@ -1,13 +1,13 @@
 (function (R) {
-  
-  var optionTmpl = _.template("<option <%= s %> value='<%= v %>'><%= t %></value>");
+  R.SelectView = R.View.extend({
 
-  // select handlers
-  R.select = new R.El({
-    /**
-     * Populates select with models
-     */
-    init: function (dec) {
+    template: _.template("<option <%= s %> value='<%= v %>'><%= t %></value>"),
+
+    events: {
+      "change": "_updateModel"
+    },
+
+    _updateView: function (dec) {
       var data = dec.data,
           that = this,
           value = dec.options.value || dec.attr,
@@ -18,20 +18,22 @@
       if (c) {
         c = this.dec.ribs.getObj(c);
       }
-          
+
       if (data.models) {
-        that.append(optionTmpl({s: "", v: "", t: caption}));
+        that.append(this.template({s: "", v: "", t: caption}));
         data.each(function (model) {
           v = (value) ? model.get(value) : model.cid;
-          s = (v === model.get(value) || v === model.id) ? 'selected' : ''; 
+          s = (v === model.get(value) || v === model.id) ? 'selected' : '';
           var option = optionTmpl({s:s, v:v, t:v});
           $(option).data('model', model).appendTo(that);
         });
       }
     },
 
-    getCurrent: function () {
-      return $('option:selected', this).data('model');
+    // updates model with current value from view
+    _updateModel: function () {
+      var val = $('option:selected', this.el).data('model');
+      this.model.set(R.utils.make(this.attr, val));
     }
   });
 })(Ribs);
