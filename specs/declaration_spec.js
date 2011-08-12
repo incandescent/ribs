@@ -63,13 +63,13 @@ describe("Ribs.Declaration", function () {
       });
 
       it("should reference model and create two bindings", function () {
-        var dec = this.ribs.bind($('<div data-bind="data:car, click:handler, change:update" />'));
+        var dec = this.ribs.bind($('<div data-bind="data:car, click:handler, mouseout:handler" />'));
         expect(dec.data).toBe(this.car);
         expect(dec.bindings.length).toBe(2);
       });
 
       it("should contain attribute", function () {
-        var dec = this.ribs.bind($('<div data-bind="data:car:color, click:handler, change:update" />'));
+        var dec = this.ribs.bind($('<div data-bind="data:car:color, click:handler" />'));
         expect(dec.attr).toBe('color');
       });
 

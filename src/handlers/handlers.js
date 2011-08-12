@@ -1,48 +1,5 @@
 (function (R) {
 
-  // returns element's tag name
-  $.fn.tagName = function () {
-    return this.get(0).tagName.toLowerCase();
-  };
-
-  // returns one of the types:
-  // [checkbox, radio, select, input, text]
-  // for given DOM element
-  $.fn.getType = function () {
-    var formTags = ["input", "textarea", "select"];
-    if (_.include(formTags, this.tagName())) {
-      if (this.is(':checkbox')) {
-        return "checkbox";
-      }
-      if (this.is(':radio')) {
-        return "radio";
-      }
-      if (this.tagName() === 'select') {
-        return "select";
-      }
-      return "input";
-    }
-    else {
-      return "text";
-    }
-  };
-
-  // 'interface' for elements
-  R.El = function (props) {
-    _.extend(this, props);
-  };
-
-  R.El.prototype = {
-    init: function (dec) {},
-    getCurrent: function () {},
-    update: function (value) {
-      this.val(value);
-    },
-    getValue: function (b) {
-      return this.val();
-    }
-  };
-
   // proxy for handlers
   R.handlers = {
     // init hook
@@ -53,22 +10,10 @@
     },
 
     /**
-     * Sets value on attribute which belongs to model or collection.
-     */
-    set: function (dec, b) {
-      if (b.attr) {
-        var type = this.getType(),
-            val = R[type].getValue.apply(this, arguments),
-            value = {};
-        value[b.attr] = val;
-        dec.data.set(value);
-      }
-    },
-
-    /**
       * Sets current model
       */
     setCurrent: function (dec, b) {
+      /*
       var type = this.getType();
 
       if (!dec.options.current) {
@@ -82,17 +27,7 @@
       var model = R[type].getCurrent.call(this);
       dec.options.current.set(model.attributes);
       dec.options.current.cid = model.cid;
-    },
-
-    /**
-     * Updates DOM element's value.
-     */
-    update: function (dec, b) {
-      if (b.attr) {
-        var value = b.data.get(b.attr),
-            type = this.getType();
-        R[type].update.call(this, value);
-      }
+      */
     },
 
     // TODO: refactor
