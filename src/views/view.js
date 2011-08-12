@@ -1,7 +1,7 @@
 (function (R) {
 
   R.utils = {
-    // a convinient method which creates
+    // a convenient method which creates
     // object with predefined key/value
     make: function (key, value) {
       var o = {};
