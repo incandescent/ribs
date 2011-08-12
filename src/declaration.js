@@ -74,7 +74,7 @@
     _resolveBindings: function (config) {
       var self = this;
       // process bindings
-      _(config.bindings).each(function (binding, i) {
+      _(config.bindings).each(function (binding) {
         binding.resolve(self);
         self.bindings.push(binding);
       });

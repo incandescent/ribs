@@ -13,19 +13,18 @@ describe("Ribs.Declaration", function () {
       model: Car
     });
 
-    this.View = Backbone.View.extend({
+    this.DefaultView = Backbone.View.extend({
       render: function () {
         this.el.html('render executed');
       }
     });
 
-    this.view = new this.View();
+    this.view = new this.DefaultView();
     this.cars = new Cars();
     this.car.set({'color': 'red'});
     this.cars.add(this.car);
 
     this.handler = function () {
-      console.log('executing');
       self.counter++;
     }
 
@@ -123,7 +122,7 @@ describe("Ribs.Declaration", function () {
       });
 
       it("should reference model from collection", function () {
-        setFixtures('<script type="text/html" id="carTmpl"><li data-bind="view:View"><%= color %></li></script>' +
+        setFixtures('<script type="text/html" id="carTmpl"><li data-bind="view:DefaultView"><%= color %></li></script>' +
           '<ul id="list" data-bind="data:cars, add:render, template:carTmpl" />');
 
         Ribs(this);
@@ -133,6 +132,7 @@ describe("Ribs.Declaration", function () {
         var dec = $('#list > li:first').data('declaration');
         expect(dec.view.model).toBe(this.cars.at(1));
       });
+
     });
   });
 
@@ -182,7 +182,7 @@ describe("Ribs.Declaration", function () {
 
     describe("when model attribute is changed", function () {
       it("should change input text value", function () {
-        setFixtures('<input id="text" type="text" data-bind="data:car:color, change:update" />');
+        setFixtures('<input id="text" type="text" data-bind="data:car:color, view:InputView" />');
         Ribs(this);
         this.car.set({color: "blue"});
         expect($('#text').val()).toBe("blue");

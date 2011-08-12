@@ -11,7 +11,6 @@
      *    * `data`     - backbone model or collection in format *`data:[collection|model](:attr)`*
      *    * `template` - template used for rendering
      *    * `view`     - backbone view
-     *    * `observable` - marks an element as observable
      *    * `bindings` - array of pairs: `event:handler`. All Ribs events are supported. Additionary
      *                   custom events can be defined. All handlers should be added to Ribs.Handlers
      *    * `options`  - hash of additional options which could be used by handlers
@@ -62,7 +61,7 @@
 
       var k, v1, v2, t = token;
 
-      if (!_.isArray(block) || block.length < 1) {
+      if (!_.isArray(block) || block.length < 2) {
         throw new Error("Block " + block + " has a wrong format.");
       }
 
@@ -71,9 +70,6 @@
       v2 = block[2];
 
       switch (k) {
-      case "observable":
-        t.observable = true;
-        break;
       case "data":
         t.data = v1;
         t.attr = v2;

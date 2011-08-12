@@ -123,7 +123,7 @@
       // process nested bindings
       if ($(html).size() > 0) {
         // find including self
-        this.dec.ribs.bindTree(html.find('*').andSelf(), function (dec) {
+        dec.ribs.bindTree(html.find('*').andSelf(), function (dec) {
           if (dec.view) {
             dec.view.model = model;
           }

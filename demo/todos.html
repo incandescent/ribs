@@ -28,7 +28,7 @@
 
     <script id="todo-tmpl" type="text/html">
       <li data-bind="view:TodoView">
-        <input type="checkbox" data-bind="click:toggleDone" />
+        <input type="checkbox" data-bind="click:toggleDone, " />
         <%= text %> <a href="#" data-bind="click:remove">delete</a>
       </li>
     </script>

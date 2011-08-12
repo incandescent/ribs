@@ -27,43 +27,50 @@
     }
   };
 
-  // TODO: should ViewModel be a mixin
-  // which extends regular backbone view
-  // if `observable` is present?
+  R.utils = {
+    // a convinient method which creates
+    // object with predefined key/value
+    make: function (key, value) {
+      var o = {};
+      o[key] = value;
+      return o;
+    }
+  };
+
+  // default observable View implementation
   R.View = Backbone.View.extend({
-    initialize: function (options) {
-      this.attr = options.dec.attr;
+
+    initialize: function () {
+      this.dec = this.options.dec;
+      this.attr = this.dec.attr;
+      this._setup();
     },
 
-    // updates view with model's value
+    _setup: function () {
+      _.bindAll(this, '_updateView');
+      this.model.bind('change:' + this.attr, this._updateView);
+    },
+
+    // updates view with the value from the model
     _updateView: function () {
-      this.el.val(this.model.get(this.options.dec.attr));
+      this.el.text(this.model.get(this.attr));
     },
 
-    // updates model with current value from view
+    // updates model with current value from the view
     _updateModel: function () {
-      var keyValue = {};
-      keyValue[this.options.dec.attr] = this._getValue();
-      this.model.set(keyValue);
-    },
-
-    // returns view's value
-    // this is a default implementation
-    // other views should override this method
-    _getValue: function () {
-      return this.el.val();
+      this.model.set(R.utils.make(this.attr, this.el.text()));
     }
   });
 
   R.View.extend = Backbone.View.extend;
 
-  // Factory which produces new View
+  // Factory which produces views
   R.View.factory = function (dec, config) {
     var view,
         options = {};
 
     if (config.view) {
-      view = dec.ribs.getObj(config.view);
+      view = (R[config.view]) ? R[config.view] : dec.ribs.getObj(config.view);
     }
     else if (config.observable) {
       view = R[dec.el.getType() + 'View'];
@@ -100,4 +107,5 @@
 
     return view;
   }
+
 })(Ribs);

@@ -4,10 +4,20 @@
     <title>Ribs observable</title>
   </head>
   <body>
-
     <p>bind to model, update on keyup</p>
-    <input data-bind="data:car:color, observable" type="text" name="text1" value="" />
-    <input data-bind="data:car:color, observable" type="text" name="text2" value="" />
+    <input data-bind="data:car:color, view:InputView" type="text" name="text1" value="" />
+    <input data-bind="data:car:color, view:InputView" type="text" name="text1" value="" />
+
+    <div data-bind="data:car:color, view:TextView"></div>
+
+    <input type="radio" data-bind="data:car:visible, view:RadioView" name="radio" value="true" />
+    <input type="radio" data-bind="data:car:visible, view:RadioView" name="radio" value="false" />
+
+    <input type="checkbox" data-bind="data:car:visible, view:CheckboxView" name="checkbox" value="true" />
+
+    <div data-bind="data:car:visible, view:Toggable">
+      visible!
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
     <script src="../vendor/underscore.js"></script>
@@ -15,24 +25,26 @@
     <script src="../src/ribs.js"></script>
     <script src="../src/binding.js"></script>
     <script src="../src/declaration.js"></script>
-    <script src="../src/view.js"></script>
-
+    <script src="../src/views/view.js"></script>
+    <script src="../src/views/input_view.js"></script>
+    <script src="../src/views/text_view.js"></script>
+    <script src="../src/views/checkbox_view.js"></script>
+    <script src="../src/views/radio_view.js"></script>
     <script src="../src/scanner.js"></script>
     <script>
       var Car = Backbone.Model;
-      var Cars = Backbone.Collection.extend({
-        model: Car
+      var car = new Car();
+
+      var Toggable = Ribs.View.extend({
+        _updateView: function () {
+          this.el.toggle(this.model.get('visible'));
+        }
       });
 
-      var cars = new Cars();
-      cars.add({color: "red"});
-      cars.add({color: "green"});
-      cars.add({color: "blue"});
-      var car = cars.first();
       $(function () {
         Ribs();
         setTimeout(function () {
-          car.set(cars.last().attributes);
+          car.set({color: "red", visible: true});
         }, 1000);
       });
     </script>
