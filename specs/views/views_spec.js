@@ -2,7 +2,7 @@ describe("Views", function () {
   beforeEach(function () {
     this.addMatchers(instanceOfMatcher);
     this.car = new Backbone.Model;
-    this.car.set({color: 'red'});
+    this.car.set({color: 'red', ready: false});
     this.ribs = Ribs(this);
     this.CustomView = Backbone.View.extend({});
   });
@@ -56,6 +56,27 @@ describe("Views", function () {
       this.dec.view.el.val('blue');
       this.dec.view.el.trigger('keyup');
       expect(this.dec.view.model.get('color')).toBe('blue');
+    });
+  });
+
+  describe('CheckboxView', function () {
+    beforeEach(function () {
+      this.dec = this.ribs.bind($('<input data-bind="data:car:ready, view:CheckboxView" />'));
+    });
+
+    it("should check the checkbox when model's value is truthy", function () {
+      this.car.set({ready: true});
+      expect(this.dec.view.el.prop('checked')).toBe(true);
+    });
+
+    it("should uncheck the checkbox when model's value is falsy", function () {
+      this.car.set({ready: false});
+      expect(this.dec.view.el.prop('checked')).toBe(false);
+    });
+
+    it("should change model's attribute value when checkbox is clicked", function() {
+      this.dec.view.el.prop("checked", true).trigger("click");
+      expect(this.car.get('ready')).toBe(true);
     });
   });
 });
