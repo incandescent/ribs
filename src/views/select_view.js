@@ -24,6 +24,8 @@
 
       // if collection present
       if (data.models) {
+        this.el.html('');
+
         if (caption !== "false") {
           this.el.append(this.template({s: "", v: "", t: caption}));
         }
@@ -35,8 +37,8 @@
 
     // updates model with current value from view
     _updateModel: function () {
-      var val = $('option:selected', this.el).data('model');
-      this.model.set(R.utils.make(this.attr, val));
+      //var model = $('option:selected', this.el).data('model');
+      //model.set(R.utils.make(this.attr, val));
     },
 
     _renderOption: function (model) {

@@ -18,8 +18,10 @@
     <div data-bind="data:car:visible, view:Toggable">
       visible!
     </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <br />
+    <select data-bind="data:cars:color, view:SelectView"></select>
+    <br />
+    <script src="../vendor/jquery.js"></script>
     <script src="../vendor/underscore.js"></script>
     <script src="../vendor/backbone.js"></script>
     <script src="../src/ribs.js"></script>
@@ -33,8 +35,23 @@
     <script src="../src/views/select_view.js"></script>
     <script src="../src/scanner.js"></script>
     <script>
-      var Car = Backbone.Model;
+
+      var Car = Backbone.Model.extend({
+        collection: Cars,
+        initialize: function () {
+          this.set({visible: false});
+        }
+      });
+
+      var Cars = Backbone.Collection.extend({
+        model: Car
+      });
+
+      var cars = new Cars();
+      cars.add([{color: "green"}, {color: "blue"}, {color: "yellow"}]);
       var car = new Car();
+      car.set({color: "red"});
+      cars.add(car);
 
       var Toggable = Ribs.View.extend({
         _updateView: function () {
@@ -46,7 +63,7 @@
         Ribs();
         setTimeout(function () {
           car.set({color: "red", visible: true});
-        }, 1000);
+        }, 100);
       });
     </script>
   </body>

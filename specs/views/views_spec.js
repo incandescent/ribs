@@ -117,7 +117,7 @@ describe("Views", function () {
 
     it("should change model's attribute value when radio button is selected", function () {
       this.dec1.view.el.prop("checked", true).trigger("click");
-      expect(this.car.get('ready')).toBe(true);
+      expect(this.car.get('ready')).toBe('true');
     });
   });
 
