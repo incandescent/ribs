@@ -8,6 +8,7 @@
     // updates view with model's value
     _updateView: function () {
       var val = this.model.get(this.attr);
+      console.log()
       // TODO revisit testing for truthy/falsy values
       if (val.toString() == "true") {
         this.el.prop('checked', true);

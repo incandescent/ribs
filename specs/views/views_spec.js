@@ -61,21 +61,46 @@ describe("Views", function () {
 
   describe('CheckboxView', function () {
     beforeEach(function () {
-      this.dec = this.ribs.bind($('<input data-bind="data:car:ready, view:CheckboxView" />'));
+      this.dec = this.ribs.bind($('<input type="checkbox" data-bind="data:car:ready, view:CheckboxView" />'));
     });
 
     it("should check the checkbox when model's value is truthy", function () {
       this.car.set({ready: true});
-      expect(this.dec.view.el.prop('checked')).toBe(true);
+      expect(this.dec.view.el).toBeChecked();
     });
 
     it("should uncheck the checkbox when model's value is falsy", function () {
       this.car.set({ready: false});
-      expect(this.dec.view.el.prop('checked')).toBe(false);
+      expect(this.dec.view.el).not.toBeChecked();
     });
 
     it("should change model's attribute value when checkbox is clicked", function() {
       this.dec.view.el.prop("checked", true).trigger("click");
+      expect(this.car.get('ready')).toBe(true);
+    });
+  });
+
+  describe('RadioView', function () {
+    beforeEach(function () {
+      this.dec1 = this.ribs.bind($('<input type="radio" name="ready" data-bind="data:car:ready, view:RadioView" value="true" />'));
+      this.dec2 = this.ribs.bind($('<input type="radio" name="ready" data-bind="data:car:ready, view:RadioView" value="false" />'));
+    });
+
+    it("should select radio button with value true", function () {
+      this.car.set({ready: true});
+      expect(this.dec1.view.el).toBeChecked();
+      expect(this.dec2.view.el).not.toBeChecked();
+    });
+
+    it("should select radio button with value false", function () {
+      this.car.set({ready: true});
+      this.car.set({ready: false});
+      expect(this.dec2.view.el).toBeChecked();
+      expect(this.dec1.view.el).not.toBeChecked();
+    });
+
+    it("should change model's attribute value when radio button is selected", function () {
+      this.dec1.view.el.prop("checked", true).trigger("click");
       expect(this.car.get('ready')).toBe(true);
     });
   });

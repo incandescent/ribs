@@ -9,16 +9,16 @@
     _updateView: function () {
       var val = this.model.get(this.attr);
       if (this.el.val() == val.toString()) {
-        this.el.attr('checked', true);
+        this.el.prop('checked', true);
       }
       else {
-        this.el.removeAttr('checked');
+        this.el.prop('checked', false);
       }
     },
 
     // updates model with current value from view
     _updateModel: function () {
-      var val = this.el.val();
+      var val = this.el.prop('checked');
       this.model.set(R.utils.make(this.attr, val));
     }
   });
