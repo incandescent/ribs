@@ -21,7 +21,14 @@
 
     _setup: function () {
       _.bindAll(this, '_updateView');
-      this.model.bind('change:' + this.attr, this._updateView);
+
+      if (this.model) {
+        this.model.bind('change:' + this.attr, this._updateView);
+      }
+      else {
+        this.collection.bind('change:' + this.attr, this._updateView);
+      }
+      this._updateView();
     },
 
     // updates view with the value from the model

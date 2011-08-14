@@ -13,7 +13,7 @@ describe("Views", function () {
     });
 
     this.cars = new Cars();
-    this.cars.add([{color: 'red'}, {color: 'blue'},{color: 'green'}]);
+    this.cars.add([{color: 'yellow'}, {color: 'blue'},{color: 'green'}]);
     this.car = new Car();
 
     this.car.set({color: 'red'});
@@ -123,11 +123,20 @@ describe("Views", function () {
 
   describe('SelectView', function () {
     beforeEach(function () {
-      this.dec = this.ribs.bind($('<select data-bind="data:cars"></select>'));
+      this.dec = this.ribs.bind($('<select data-bind="data:cars:color, view:SelectView"></select>'));
     });
 
     it("should set options for select element from collection", function () {
-      //this.dec.view.el
+      expect(this.dec.view.el.find('option').size()).toBe(5);
+    });
+
+    it("should include default caption", function () {
+      expect(this.dec.view.el.find('option:selected').text()).toBe('Choose one');
+    });
+
+    it("should skip caption", function () {
+      this.dec = this.ribs.bind($('<select data-bind="data:cars, view:SelectView, caption:false"></select>'));
+      expect(this.dec.view.el.find('option').size()).toBe(4);
     });
   });
 });
