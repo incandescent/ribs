@@ -15,12 +15,7 @@
 
     _updateView: function () {
       var data = this.dec.data,
-          caption = this.dec.options.caption || this.caption,
-          c = this.dec.options.current;
-
-      if (c) {
-        c = this.dec.ribs.getObj(c);
-      }
+          caption = this.dec.options.caption || this.caption;
 
       // if collection present
       if (data.models) {
@@ -37,8 +32,18 @@
 
     // updates model with current value from view
     _updateModel: function () {
-      //var model = $('option:selected', this.el).data('model');
-      //model.set(R.utils.make(this.attr, val));
+      var model = $('option:selected', this.el).data('model'),
+        c = this.dec.options.current;
+
+      if (c) {
+        if (typeof c == "string") {
+          c = this.dec.ribs.getObj(c);
+        }
+
+        c.set(model.attributes);
+        c.cid = model.cid;
+        c.id = model.id;
+      }
     },
 
     _renderOption: function (model) {

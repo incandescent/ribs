@@ -19,7 +19,7 @@
       visible!
     </div>
     <br />
-    <select data-bind="data:cars:color, view:SelectView"></select>
+    <select data-bind="data:cars:color, view:SelectView, current:car"></select>
     <br />
     <script src="../vendor/jquery.js"></script>
     <script src="../vendor/underscore.js"></script>
@@ -51,7 +51,6 @@
       cars.add([{color: "green"}, {color: "blue"}, {color: "yellow"}]);
       var car = new Car();
       car.set({color: "red"});
-      cars.add(car);
 
       var Toggable = Ribs.View.extend({
         _updateView: function () {

@@ -3,13 +3,6 @@
   // TODO this should go away completelly
   // proxy for handlers
   R.handlers = {
-    // init hook
-    init: function (dec) {
-      this.dec = dec;
-      var type = this.getType();
-      R[type].init.call(this, dec);
-    },
-
     /**
       * Sets current model
       */
