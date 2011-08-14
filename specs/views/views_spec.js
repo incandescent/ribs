@@ -1,8 +1,24 @@
 describe("Views", function () {
   beforeEach(function () {
     this.addMatchers(instanceOfMatcher);
-    this.car = new Backbone.Model;
-    this.car.set({color: 'red', ready: false});
+
+    var Car = Backbone.Model.extend({
+      collection: Cars,
+      initialize: function () {
+        this.set({ready: false});
+      }
+    });
+    var Cars = Backbone.Collection.extend({
+      model: Car
+    });
+
+    this.cars = new Cars();
+    this.cars.add([{color: 'red'}, {color: 'blue'},{color: 'green'}]);
+    this.car = new Car();
+
+    this.car.set({color: 'red'});
+    this.cars.add(this.car);
+
     this.ribs = Ribs(this);
     this.CustomView = Backbone.View.extend({});
   });
@@ -102,6 +118,16 @@ describe("Views", function () {
     it("should change model's attribute value when radio button is selected", function () {
       this.dec1.view.el.prop("checked", true).trigger("click");
       expect(this.car.get('ready')).toBe(true);
+    });
+  });
+
+  describe('SelectView', function () {
+    beforeEach(function () {
+      this.dec = this.ribs.bind($('<select data-bind="data:cars"></select>'));
+    });
+
+    it("should set options for select element from collection", function () {
+      //this.dec.view.el
     });
   });
 });
