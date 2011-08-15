@@ -38,10 +38,16 @@
      */
     scan: function (expr) {
       var blocks = expr.split(','),
-          token = {bindings:[], options:{}, expr:expr};
+          token = {bindings:[], options:{}, expr:expr},
+          block;
 
       for (var i = 0, l = blocks.length; i < l; i++) {
         block = blocks[i].trim().split(':');
+
+        if (block.length < 2) {
+          throw new Error('Invalid element in expression: ' + expr);
+        }
+
         this._tokenize(block, token);
       }
 
@@ -60,10 +66,6 @@
     _tokenize: function (block, token) {
 
       var k, v1, v2, t = token;
-
-      if (!_.isArray(block) || block.length < 2) {
-        throw new Error("Block " + block + " has a wrong format.");
-      }
 
       k = block[0];
       v1 = block[1];

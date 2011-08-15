@@ -17,7 +17,7 @@ describe("Views", function () {
     this.car = new Car();
 
     this.car.set({color: 'red'});
-    this.cars.add(this.car);
+    //this.cars.add(this.car);
 
     this.ribs = Ribs(this);
     this.CustomView = Backbone.View.extend({});
@@ -127,7 +127,7 @@ describe("Views", function () {
     });
 
     it("should set options for select element from collection", function () {
-      expect(this.dec.view.el.find('option').size()).toBe(5);
+      expect(this.dec.view.el.find('option').size()).toBe(4);
     });
 
     it("should include default caption", function () {
@@ -136,7 +136,14 @@ describe("Views", function () {
 
     it("should skip caption", function () {
       this.dec = this.ribs.bind($('<select data-bind="data:cars, view:SelectView, caption:false"></select>'));
-      expect(this.dec.view.el.find('option').size()).toBe(4);
+      expect(this.dec.view.el.find('option').size()).toBe(3);
+    });
+
+    it("should reference model via current option", function () {
+      this.dec1 = this.ribs.bind($('<div data-bind="data:car:color, view:TextView"></div>'));
+      this.dec2 = this.ribs.bind($('<select data-bind="data:cars, view:SelectView, current:car"></select>'));
+      //this.dec2.view.el.select();
+      //expect(this.dec.view.el.text()).toBe('');
     });
   });
 });

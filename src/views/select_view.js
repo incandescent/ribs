@@ -40,6 +40,7 @@
           c = this.dec.ribs.getObj(c);
         }
 
+        // TODO this sucks
         c.set(model.attributes);
         c.cid = model.cid;
         c.id = model.id;

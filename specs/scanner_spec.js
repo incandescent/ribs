@@ -34,6 +34,13 @@ describe("Ribs.Scanner", function () {
   it("should throw an exception about wrong format", function () {
     expect(function () {
       R.scanner.scan('data');
-    }).toThrow(new Error('Block data has a wrong format.'));
+    }).toThrow(new Error('Invalid element in expression: data'));
   });
+
+  it("should throw an exception about invalid element", function () {
+    expect(function () {
+      R.scanner.scan('data:car, click:toggle,');
+    }).toThrow(new Error('Invalid element in expression: data:car, click:toggle,'));
+  });
+
 });

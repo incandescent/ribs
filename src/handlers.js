@@ -1,36 +1,19 @@
 (function (R) {
 
-  // TODO this should go away completelly
-  // proxy for handlers
+  // list of predefined handlers
+  // which currently don't fit into any view
+  // Currently handlers execute in the context of given view
+  // or if view is not present in the context of declaration
   R.handlers = {
-    /**
-      * Sets current model
-      */
-    setCurrent: function (dec, b) {
-      /*
-      var type = this.getType();
-
-      if (!dec.options.current) {
-        throw new Error('no current element found for ' +  this);
-      }
-
-      if (typeof dec.options.current == "string") {
-        dec.options.current = dec.ribs.getObj(dec.options.current);
-      }
-
-      var model = R[type].getCurrent.call(this);
-      dec.options.current.set(model.attributes);
-      dec.options.current.cid = model.cid;
-      */
-    },
-
-    // TODO: refactor
-    render: function (dec, b) {
+    render: function (declaration, binding) {
       var that = this,
-          html, t, model, attrs;
+          html, t, model, attrs,
+          b = binding,
+          dec = declaration;
 
       t = dec.getTemplate();
 
+      // collection given
       if (b.data.models) {
         model = b.data.last();
         if (model) {
@@ -39,7 +22,7 @@
           html = $(html).appendTo(that);
         }
       }
-      else {
+      else { // single model
         html = t(b.data.attributes);
         if ($(html).size() > 0) {
           html = $(html).appendTo(that);

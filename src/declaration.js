@@ -16,10 +16,6 @@
     this._resolveData(config);
     this._resolveView(config);
     this._resolveBindings(config);
-
-    // initialize widget on declaration element
-    // keep in declaration for now?
-    // R.handlers.init.call(this.el, this);
   };
 
   _.extend(R.Declaration.prototype, {
